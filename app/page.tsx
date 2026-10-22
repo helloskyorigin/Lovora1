@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import {LaunchOffer} from '@/components/LaunchOffer';
+import {LaunchOffer,useLaunchOffer} from '@/components/LaunchOffer';
 
 type Lang = 'en' | 'hi';
 const content = {
@@ -140,6 +140,8 @@ export default function Home() {
   const [lang, setLang] = useState<Lang>('en');
   const [sample, setSample] = useState(0);
   const c = content[lang];
+  const {offer}=useLaunchOffer();
+  const offerComplete=offer?.active===false;
   useEffect(()=>{document.documentElement.lang=lang;},[lang]);
   useEffect(()=>{
     if(typeof IntersectionObserver==='undefined'||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
@@ -163,7 +165,7 @@ export default function Home() {
           <p className="hero-tagline">{c.tagline}</p>
           <p className="hero-description">{c.description}</p>
           <a href={`/birth-details?lang=${lang}`} className="cta primary">{c.primary}<span aria-hidden="true">↗</span></a>
-          <div className="hero-notes"><span>✧ {c.free}</span><i/><span>{c.account}</span><i/><span>{c.priceHint}</span></div>
+          <div className="hero-notes"><span>✧ {c.free}</span><i/><span>{c.account}</span><i/><span>{offerComplete?(lang==="hi"?"पूरी रीडिंग ₹299": "Complete reading ₹299"):c.priceHint}</span></div>
         </div>
         <div className="hero-art"><Orrery/><span className="orbital-caption">LOVE <i/> FATE <i/> CONNECTION</span></div>
       </div>
@@ -203,7 +205,7 @@ export default function Home() {
 
     <section className="section pricing-section" id="pricing"><div className="wrap pricing-layout">
       <div className="pricing-intro" data-reveal><span className="eyebrow"><b>✦</b>{c.priceKicker}</span><h2>{c.priceTitle}</h2><p>{c.priceDescription}</p></div>
-      <div className="pricing-card" data-reveal><div className="pricing-star">✦</div><div className="pricing-old"><del>₹299</del> <span>50% OFF</span></div><div className="pricing-amount">₹149</div><p className="pricing-once">{c.priceSub}</p><LaunchOffer lang={lang} placement="pricing"/><div className="pricing-divider"/><ul>{c.priceFeatures.map(t=><li key={t}><span>✓</span>{t}</li>)}</ul>
+      <div className="pricing-card" data-reveal><div className="pricing-star">✦</div>{!offerComplete&&<div className="pricing-old"><del>₹299</del> <span>50% OFF</span></div>}<div className="pricing-amount">{offerComplete?"₹299":"₹149"}</div><p className="pricing-once">{c.priceSub}</p><LaunchOffer lang={lang} placement="pricing"/><div className="pricing-divider"/><ul>{c.priceFeatures.map(t=><li key={t}><span>✓</span>{t}</li>)}</ul>
         <a className="cta primary pricing-cta" href={`/birth-details?lang=${lang}`}>{c.priceButton}<span aria-hidden="true">↗</span></a><p className="pricing-note">{c.priceFooter}</p>
       </div>
     </div></section>

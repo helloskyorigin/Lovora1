@@ -9,9 +9,9 @@ export type DodoPayment = {
 };
 export type DodoProduct = { product_id?:string; is_recurring?:boolean;
  price?:{type?:string;currency?:string;price?:number;pay_what_you_want?:boolean;tax_inclusive?:boolean} };
-export function assertProduct(product:DodoProduct,id:string):void {
+export function assertProduct(product:DodoProduct,id:string,expectedPricePaise=PRICE_PAISE):void {
  if(product.product_id!==id || product.is_recurring!==false || product.price?.type!=="one_time_price" ||
- product.price?.currency!=="INR" || product.price?.price!==PRICE_PAISE || product.price?.pay_what_you_want===true || product.price?.tax_inclusive!==true) {
+ product.price?.currency!=="INR" || product.price?.price!==expectedPricePaise || product.price?.pay_what_you_want===true || product.price?.tax_inclusive!==true) {
   throw new Error("DODO_PRODUCT_PRICE_MISMATCH");
  }
 }

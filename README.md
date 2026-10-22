@@ -186,3 +186,6 @@ The base price before the launch promotion was ₹299; the introductory ₹149 p
 The first-500 promotion has a Redis-backed confirmed-payment counter, starting at zero for this offer. `GET /api/launch-offer` exposes only aggregate purchases (no customer data). Paid webhooks increment the counter once per verified ₹149 order even if Dodo retries. The UI does **not** claim 57% or 285 purchasers until real verified data supports it. If Redis is offline, the API hides progress and checkout fails closed.
 
 Note: the 500-user cutoff is checked when a new checkout begins, not a globally reserved payment-slot system. Multiple already-open checkouts near the 500th sale could settle after the limit; use payment-provider checkout expiration/quantity controls for a strict capped promotion. Never seed the counter with made-up purchases or fabricate reviews/testimonials.
+
+
+After 500 verified launch purchases, checkout switches to the normal ₹299 one-time Dodo product only when `DODO_LOVORA_REGULAR_PRODUCT_ID` is configured and verified at ₹299. Otherwise checkout is paused at the offer limit. An early checkout session may settle later, so a truly strict hard cap requires checkout-reservation controls at the provider.

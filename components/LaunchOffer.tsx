@@ -1,7 +1,7 @@
 "use client";
 import {useEffect,useState} from "react";
 
-type OfferStatus={claimed:number;limit:number;remaining:number;progress:number;active:boolean};
+type OfferStatus={claimed:number;limit:number;remaining:number;progress:number;active:boolean;regularAvailable?:boolean};
 export function useLaunchOffer(){
  const [offer,setOffer]=useState<OfferStatus|null>(null);
  useEffect(()=>{
@@ -13,7 +13,7 @@ export function useLaunchOffer(){
     if(v.ok===true&&typeof v.claimed==="number"&&typeof v.limit==="number"&&typeof v.progress==="number"
        &&typeof v.active==="boolean"&&Number.isSafeInteger(v.claimed)&&v.limit===500&&v.claimed>=0
        &&v.progress>=0&&v.progress<=100)
-      setOffer({claimed:v.claimed,limit:v.limit,remaining:Math.max(0,500-v.claimed),progress:v.progress,active:v.active});
+      setOffer({claimed:v.claimed,limit:v.limit,remaining:Math.max(0,500-v.claimed),progress:v.progress,active:v.active,regularAvailable:!!v.regularAvailable});
    }).catch(()=>undefined);
   return ()=>controller.abort();
  },[]);
@@ -25,7 +25,7 @@ export function LaunchOffer({lang,placement}:{lang:"en"|"hi";placement:"hero"|"p
   <div className="launch-offer__heading"><span className="launch-offer__heart" aria-hidden="true">♡</span>
    <span>{lang==="hi"?"पहली 500 प्रेम कहानियों के लिए विशेष मूल्य":"A little launch love · First 500"}</span>
   </div>
-  <div className="launch-offer__price"><del>₹299</del><strong>₹149</strong><small>50% OFF</small></div>
+  <div className="launch-offer__price">{offer?.active===false?<><strong>₹299</strong><small>{lang==="hi"?"ऑफ़र समाप्त":"Offer complete"}</small></>:<><del>₹299</del><strong>₹149</strong><small>50% OFF</small></>}</div>
   {offer&&<div className="launch-offer__progress">
    <div className="launch-offer__progress-label"><span>{lang==="hi"?`${offer.claimed} / 500 खरीदे गए`:`${offer.claimed} / 500 claimed`}</span>
      <strong>{offer.progress}%</strong></div>

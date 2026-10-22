@@ -47,3 +47,9 @@ test("previous INR 299 orders keep their original verified price requirement",()
  assert.equal(validPayment(oldPayment,legacy,productId),true);
  assert.equal(validPayment(settled,legacy,productId),false);
 });
+
+test("regular-price product only passes explicit ₹299 verification",()=>{
+ const full={...configured,price:{...configured.price,price:29900}};
+ assert.throws(()=>assertProduct(full,productId),/PRICE_MISMATCH/);
+ assert.doesNotThrow(()=>assertProduct(full,productId,29900));
+});

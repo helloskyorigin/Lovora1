@@ -13,5 +13,5 @@ export async function getLaunchOfferStatus(){
  const claimed=await getLaunchOfferClaimed();
  return {claimed,limit:LAUNCH_LIMIT,remaining:Math.max(0,LAUNCH_LIMIT-claimed),
   progress:Math.min(100,Math.round(claimed*100/LAUNCH_LIMIT)),
-  active:claimed<LAUNCH_LIMIT};
+  active:claimed<LAUNCH_LIMIT,regularAvailable:!!process.env.DODO_LOVORA_REGULAR_PRODUCT_ID};
 }
