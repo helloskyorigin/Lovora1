@@ -13,7 +13,7 @@ export type MarriageStoryReport = {
   createdAt:string;
   person:{firstName:string;birthDate:string;birthTime:string;birthplace:string; timezone:string};
   context:RelationshipContext;
-  source:{provider:"Prokerala";ayanamsa:"Lahiri";methods:string[];partial:string[]};
+  source:{provider:"Prokerala"|"LOVORA local astronomy";ayanamsa:"Lahiri"|"Approximate Lahiri";methods:string[];partial:string[]};
   chart:{rising:SignName;fifth:SignName;seventh:SignName;fifthLord:PlanetName;seventhLord:PlanetName;planets:VerifiedPlanet[];navamsa:{venus:SignName;seventhLord:SignName}|null};
   marriagePath:{headline:string;summary:string;signals:{love:number;family:number;neutral:number};caveat:string};
   timing:Timing;
@@ -26,4 +26,5 @@ export type RawChartData = {
   planets:RawPosition[];
   navamsa?:{divisional_positions?:Array<{planet?:{id?:unknown;name?:unknown};rasi?:{id?:unknown;name?:unknown}}>}|null;
   dasha?:unknown;
+  origin?:"local";
 };

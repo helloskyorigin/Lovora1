@@ -13,8 +13,8 @@ export type PreviewInsight = {
   signId: number;
   descriptionEn: string;
   descriptionHi: string;
-  source: "Prokerala planet-position";
-  ayanamsa: "Lahiri";
+  source: "Prokerala planet-position"|"Local astronomy calculation";
+  ayanamsa: "Lahiri"|"Approximate Lahiri";
   generatedAt: number;
 };
 

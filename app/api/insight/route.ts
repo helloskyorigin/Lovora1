@@ -19,17 +19,18 @@ export async function POST(request:NextRequest){
  const draft:JourneyDraft={...saved,relationship:saved.relationship||{status:"private",interest:"path"}};
  if(!draft.birthTime||!draft.timeKnown)return guide("BIRTH_TIME_REQUIRED");
  if(draft.preview?.marriagePath?.available)return NextResponse.json({ok:true,mode:"verified",insight:draft.preview},{headers});
+ let remoteAllowed=false;
  try{
-  if(!await allowPublicCost(request,"insight"))return guide("RATE_LIMIT");
+  remoteAllowed=await allowPublicCost(request,"insight");
  }catch(e){
-  console.warn("LOVORA free chart limiter unavailable:",e instanceof Error?e.message:"unknown");
-  return guide("SERVICE_BUSY");
+  // Local astronomy is cost-free and can continue if metered provider guard fails.
+  console.warn("LOVORA provider limiter unavailable; using local astronomy",e instanceof Error?e.message:"unknown");
  }
  const cacheKey=createHash("sha256").update(JSON.stringify([
   draft.dateOfBirth,draft.birthTime,draft.place.id,draft.place.latitude,draft.place.longitude,draft.place.timezone
  ])).digest("hex");
  try{
-  const insight=await calculateFreeInsight(draft,cacheKey);
+  const insight=await calculateFreeInsight(draft,cacheKey,remoteAllowed);
   const updated:JourneyDraft={...draft,preview:insight};
   const token=sealBirthDraft(updated);
   const result=NextResponse.json({ok:true,mode:"verified",insight,sessionToken:token},{headers});

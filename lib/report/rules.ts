@@ -201,7 +201,7 @@ export function createMarriageReport(draft:JourneyDraft,raw:RawChartData, report
       evidenceIds:["seven","moon"]},
     {id:"evidence",number:6,eyebrow:"THE WHY",title:"The Chart Behind the Story",introduction:"Every major interpretation has a checkable source.",
       paragraphs:["Birth-chart rising sign: "+rising.sign+". Traditional Lahiri sidereal whole-sign houses are calculated from this verified ascendant. Romance sign: "+fifth+". Partnership sign: "+seventh+".",
-        "Venus: "+venus.sign+" (house "+venus.wholeSignHouse+"). Moon: "+moon.sign+" (house "+moon.wholeSignHouse+"). Partnership ruler: "+seventhLord+" in "+seventhP.sign+". These are chart facts supplied by the provider and structured by the rules engine.",
+        "Venus: "+venus.sign+" (house "+venus.wholeSignHouse+"). Moon: "+moon.sign+" (house "+moon.wholeSignHouse+"). Partnership ruler: "+seventhLord+" in "+seventhP.sign+". These chart positions were calculated or supplied by the named source and interpreted by the rules engine.",
         "No unverifiable probabilities, fabricated marriage scores or numerical success rates are included. You can inspect every supporting indicator below."],
       evidenceIds:evidence.map(e=>e.id)},
     {id:"keepsake",number:7,eyebrow:"YOUR KEEPSAKE",title:"A Story Worth Keeping",introduction:"Your own symbolic story, presented as a keepsake.",
@@ -211,12 +211,13 @@ export function createMarriageReport(draft:JourneyDraft,raw:RawChartData, report
       evidenceIds:["asc","houses"],note:"This report is for personal exploration and entertainment."},
   ];
   if(chapters.length!==7||chapters.some(c=>c.paragraphs.length<2))throw new Error("INVALID_REPORT_STRUCTURE");
+  const isLocal=raw.origin==="local";
   const report:MarriageStoryReport={
     version:1,id:reportId,createdAt:createdAt.toISOString(),
     person:{firstName:draft.firstName,birthDate:draft.dateOfBirth,birthTime:draft.birthTime,
       birthplace:[draft.place.name,draft.place.region,draft.place.country].filter(Boolean).join(", "),timezone:draft.place.timezone},
     context:draft.relationship,
-    source:{provider:"Prokerala",ayanamsa:"Lahiri",methods:["Sidereal planet-position","Traditional whole-sign houses","Documented 5th/7th lord comparisons",...(navamsa?["Verified Navamsa positions"]:[]),...(timing.status==="supported"?["Validated Dasha interval fields"]:[])],partial:[...(!navamsa?["Navamsa data unavailable or unparseable"]:[]),...(timing.status!=="supported"?["Dasha timing unavailable or unparseable"]:[])]},
+    source:{provider:isLocal?"LOVORA local astronomy":"Prokerala",ayanamsa:isLocal?"Approximate Lahiri":"Lahiri",methods:[isLocal?"Local geocentric planetary computation (approximate ayanamsa)":"Sidereal planet-position","Traditional whole-sign houses","Documented 5th/7th lord comparisons",...(navamsa?["Verified Navamsa positions"]:[]),...(timing.status==="supported"?["Validated Dasha interval fields"]:[])],partial:[...(isLocal?["Computed locally using Astronomy Engine; ayanamsa approximation may change signs at boundaries. Treat interpretations as tentative."]:[]),...(!navamsa?["Navamsa data unavailable or unparseable"]:[]),...(timing.status!=="supported"?["Dasha timing unavailable or unparseable"]:[])]},
     chart:{rising:rising.sign,fifth,seventh,fifthLord,seventhLord,planets,navamsa},
     marriagePath:{headline,summary,signals,caveat:"No marriage-type probability or guaranteed outcome is estimated."},
     timing,evidence,chapters,disclaimer:NOTES.disclaimer,

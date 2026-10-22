@@ -2,6 +2,7 @@ import "server-only";
 import type { JourneyDraft, PreviewInsight } from "./context";
 import { resolveBirthUTC } from "./birth-time";
 import {previewMarriagePath} from "./report/path-preview";
+import {calculateLocalChart,calculateLocalInsight} from "./local-chart";
 
 type OAuthToken = { access_token?: unknown; expires_in?: unknown };
 type Position = { id?: unknown; name?: unknown; rasi?: { id?: unknown; name?: unknown } };
@@ -84,17 +85,25 @@ function extractVenus(value: PlanetPayload): PreviewInsight {
     source: "Prokerala planet-position", ayanamsa: "Lahiri", generatedAt: Date.now() };
 }
 
-export async function calculateFreeInsight(draft: JourneyDraft, cacheKey: string): Promise<PreviewInsight> {
+export async function calculateFreeInsight(draft: JourneyDraft, cacheKey: string, allowRemote=true): Promise<PreviewInsight> {
   const hit = previewCache.get(cacheKey);
   if (hit && hit.expires > Date.now()) return hit.insight;
   const ongoing = pending.get(cacheKey);
   if (ongoing) return ongoing;
   if (previewCache.size > 500) previewCache.clear();
   const run = (async () => {
-    const token = await accessToken();
-    const data = await fetchPositions(draft, token);
-    const insight = extractVenus(data);
-    previewCache.set(cacheKey, { insight, expires: Date.now() + 10 * 60_000 });
+    let insight:PreviewInsight;
+    if(allowRemote){
+      try{
+        const token=await accessToken();
+        const data=await fetchPositions(draft,token);
+        insight=extractVenus(data);
+      }catch(error){
+        console.warn("LOVORA remote chart failed; switching to local astronomy",error instanceof Error?error.message:"unknown");
+        insight=calculateLocalInsight(draft);
+      }
+    }else insight=calculateLocalInsight(draft);
+    previewCache.set(cacheKey,{insight,expires:Date.now()+10*60_000});
     return insight;
   })();
   pending.set(cacheKey, run);
@@ -106,9 +115,18 @@ export async function calculateFreeInsight(draft: JourneyDraft, cacheKey: string
 // Optional endpoints can fail independently; missing data is explicitly disclosed.
 export async function fetchPaidChartData(draft: JourneyDraft): Promise<import("./report/types").RawChartData> {
   if (!draft.timeKnown || !draft.birthTime) throw new Error("BIRTH_TIME_REQUIRED");
-  const token = await accessToken();
-  const original = await fetchPositions(draft, token);
-  if (original.status !== "ok" || !Array.isArray(original.data?.planet_position)) throw new Error("UNSUPPORTED_CHART_RESPONSE");
+  let token:string,original:PlanetPayload;
+  try{
+    token=await accessToken();
+    original=await fetchPositions(draft,token);
+    if(original.status!=="ok"||!Array.isArray(original.data?.planet_position))
+      throw new Error("UNSUPPORTED_CHART_RESPONSE");
+    // The paid rules require a complete rising sign and seven named planets.
+    previewMarriagePath(original.data.planet_position);
+  }catch(error){
+    console.warn("LOVORA paid chart remote unavailable; running local astronomy",error instanceof Error?error.message:"unknown");
+    return calculateLocalChart(draft);
+  }
   const datetime = resolveBirthUTC(draft.dateOfBirth, draft.birthTime, draft.place.timezone).toISOString();
   const base = {
     ayanamsa: "1", coordinates: draft.place.latitude + "," + draft.place.longitude,

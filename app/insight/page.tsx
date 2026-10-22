@@ -19,7 +19,7 @@ const copy={
  en:{
   top:"YOUR FIRST LOVE INSIGHT",title:"Love or arranged?",
   summary:"What do your traditional birth-chart symbols suggest?",
-  verified:"BASED ON YOUR VERIFIED CHART",unverified:"LOVE & MARRIAGE · A FIRST LOOK",
+  verified:"BASED ON YOUR CALCULATED CHART",unverified:"LOVE & MARRIAGE · A FIRST LOOK",
   linked:"Romance and partnership are connected.",
   neutral:"Your chart leaves both paths open.",
   linkedDesc:"Traditional 5th- and 7th-house symbols show a connection. The complete reading explores why.",
@@ -40,7 +40,7 @@ const copy={
  hi:{
   top:"आपका पहला प्रेम संकेत",title:"लव मैरिज या अरेंज मैरिज?",
   summary:"पारंपरिक जन्म-कुंडली के संकेत क्या कहते हैं?",
-  verified:"सत्यापित जन्म-कुंडली पर आधारित",unverified:"प्यार और विवाह · पहली झलक",
+  verified:"गणना की गई जन्म-कुंडली पर आधारित",unverified:"प्यार और विवाह · पहली झलक",
   linked:"प्रेम और साझेदारी के संकेत जुड़े हैं।",
   neutral:"दोनों रास्तों की संभावना खुली है।",
   linkedDesc:"पंचम और सप्तम भाव में पारंपरिक संबंध दिखता है। पूरी रिपोर्ट में इसका अर्थ समझें।",
@@ -112,6 +112,8 @@ function ResultPage(){
       <p className="lovora-result__kicker">✦ {verified?c.verified:c.unverified}</p>
       <h2>{!verified?c.general:linked?c.linked:c.neutral}</h2>
       <p>{!verified?c.generalDesc:linked?c.linkedDesc:c.neutralDesc}</p>
+      {verified&&result?.insight?.source==="Local astronomy calculation"&&
+       <p className="lovora-result__local-note">{lang==="hi"?"ऑफ़लाइन गणना · अनुमानित लाहिड़ी अयनांश · राशि सीमा के पास परिणाम बदल सकता है।":"Offline astronomy calculation · approximate Lahiri offset · signs near boundaries can vary."}</p>}
       <p className="lovora-result__small">{c.caveat}</p>
      </section>
      <section className="lovora-result__locked" aria-label={c.unlock}>
