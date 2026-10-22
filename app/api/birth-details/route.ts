@@ -42,6 +42,7 @@ export async function POST(request: NextRequest) {
       dateOfBirth: validated.data.dateOfBirth,
       birthTime: validated.data.birthTime,
       timeKnown: validated.data.timeKnown,
+      guardianConsent: validated.data.guardianConsent,
       place,
       savedAt: Date.now(),
     };

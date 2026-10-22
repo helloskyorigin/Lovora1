@@ -10,7 +10,7 @@ export function CheckoutForm({lang}:{lang:"en"|"hi"}){
   e.preventDefault();if(!ack||busy)return;
   setBusy(true);setError("");
   try{
-   const res=await fetch("/api/checkout",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({email})});
+   const res=await fetch("/api/checkout",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,adultPayerConfirmed:ack})});
    const data=await res.json() as {ok?:boolean;checkoutUrl?:string;error?:string};
    if(!res.ok||!data.ok||!data.checkoutUrl)throw new Error(data.error||"Checkout unavailable.");
    window.location.assign(data.checkoutUrl);
@@ -23,7 +23,7 @@ export function CheckoutForm({lang}:{lang:"en"|"hi"}){
   <input id="lovora-pay-email" type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@example.com" required autoComplete="email" maxLength={254}/>
   <label className="lovora-checkout__ack">
    <input type="checkbox" checked={ack} onChange={e=>setAck(e.target.checked)} required/>
-   <span>{lang==="hi"?"मैं 18+ हूँ और समझता/समझती हूँ कि यह पारंपरिक ज्योतिषीय मनोरंजन है, निश्चित भविष्यवाणी नहीं।":"I'm 18+ and understand this is a traditional astrology experience for reflection, not a guaranteed prediction."}</span>
+   <span>{lang==="hi"?"मैं भुगतान करने वाला/वाली वयस्क (18+) हूँ, स्वयं के लिए या अभिभावक के रूप में। यह निश्चित भविष्यवाणी नहीं है।":"I am 18+ and paying for myself or as a parent/guardian. This is for reflection, not a guaranteed prediction."}</span>
   </label>
   {error&&<p className="lovora-checkout__error" role="alert">{error}</p>}
   <button type="submit" disabled={busy||!ack} className="lovora-checkout__button">{busy?(lang==="hi"?"चेकआउट खोल रहे हैं...":"Preparing secure checkout..."):(lang==="hi"?"पूरी कहानी अनलॉक करें — ₹299":"Unlock My Complete Story — ₹299")} <span>↗</span></button>

@@ -4,6 +4,8 @@ import { FormEvent, Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import "./birth-details.css";
+import { isMinorBirthDate } from "@/lib/birth";
+import { readApiJSON } from "@/lib/api-response";
 
 type City = { id: number; name: string; region: string; country: string; display: string };
 type Lang = "en" | "hi";
@@ -19,7 +21,9 @@ const messages = {
     cityHint: "Select your city from the suggestions — city data comes from our built-in directory.",
     whenUnknown: "An exact birth time is required for the current free glimpse. You may save your details, but you'll need to add a birth time before calculation. No time will be invented.",
     privacy: "Private by design. Your details are saved in an encrypted 24-hour browser session, not an account.",
-    age: "This experience is for adults aged 18+.",
+    age: "Ages 14+. Under 18? Parent/guardian permission and an adult payer are required.",
+    guardian: "My parent or guardian has reviewed this experience and agrees to sharing my birth details.",
+    apiError: "The app API is not responding. Install updated dependencies and restart the preview, then retry.",
     action: "Continue my story", saving: "Saving your birth moment...",
     locationWait: "Searching for places...", locationEmpty: "No cities found. Try the nearest major city.",
     footer: "Traditional Vedic astrology for reflection, not certain predictions.",
@@ -36,7 +40,9 @@ const messages = {
     cityHint: "सुझावों से सही शहर चुनें — शहर हमारी ऑफलाइन सूची से चुना जाता है।",
     whenUnknown: "अभी मुफ़्त कुंडली संकेत निकालने के लिए सही जन्मसमय ज़रूरी है। आप विवरण सेव कर सकते हैं, लेकिन गणना से पहले समय देना होगा। हम कोई अनुमानित समय नहीं बनाएँगे।",
     privacy: "आपके विवरण 24 घंटे तक एन्क्रिप्टेड सेशन में रहते हैं, कोई अकाउंट नहीं बनता।",
-    age: "यह अनुभव केवल 18 वर्ष या उससे अधिक उम्र के लोगों के लिए है।",
+    age: "14+ के लिए। 18 वर्ष से कम आयु में अभिभावक की अनुमति और भुगतान के लिए वयस्क ज़रूरी है।",
+    guardian: "मेरे अभिभावक ने यह सेवा देखी है और मेरे जन्म विवरण के उपयोग की अनुमति दी है।",
+    apiError: "ऐप का सर्वर सही जवाब नहीं दे रहा है। नए पैकेज इंस्टॉल करके प्रीव्यू दोबारा चालू करें।",
     action: "अपनी कहानी आगे बढ़ाएँ", saving: "विवरण सुरक्षित किए जा रहे हैं...",
     locationWait: "शहर खोज रहे हैं...", locationEmpty: "शहर नहीं मिला। नज़दीकी बड़े शहर से खोजें।",
     footer: "पारंपरिक वैदिक ज्योतिष व्यक्तिगत चिंतन के लिए है, पक्की भविष्यवाणी नहीं।",
@@ -52,6 +58,7 @@ function BirthDetailsForm() {
   const c = messages[language];
   const [firstName, setFirstName] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
+  const [guardianConsent, setGuardianConsent] = useState(false);
   const [timeKnown, setTimeKnown] = useState(true);
   const [birthTime, setBirthTime] = useState("");
   const [search, setSearch] = useState("");
@@ -65,8 +72,9 @@ function BirthDetailsForm() {
   const pickerRef = useRef<HTMLDivElement>(null);
 
   const today = new Date();
-  const maxDOB = new Date(Date.UTC(today.getFullYear() - 18, today.getMonth(), today.getDate())).toISOString().slice(0, 10);
+  const maxDOB = new Date(Date.UTC(today.getFullYear() - 14, today.getMonth(), today.getDate())).toISOString().slice(0, 10);
   const minDOB = new Date(Date.UTC(today.getFullYear() - 110, today.getMonth(), today.getDate())).toISOString().slice(0, 10);
+  const isMinor = !!dateOfBirth && isMinorBirthDate(dateOfBirth);
 
   useEffect(() => {
     if (selectedCity || search.trim().length < 3) {
@@ -82,7 +90,7 @@ function BirthDetailsForm() {
       setSearchError("");
       try {
         const res = await fetch("/api/places?q=" + encodeURIComponent(search.trim()), { signal: controller.signal });
-        const data = await res.json() as { results?: City[]; error?: string };
+        const data = await readApiJSON<{ results?: City[]; error?: string }>(res, c.apiError);
         if (current !== requestId.current) return;
         if (!res.ok) throw new Error(data.error || "City lookup unavailable.");
         setCities(Array.isArray(data.results) ? data.results : []);
@@ -110,15 +118,16 @@ function BirthDetailsForm() {
     if (saving) return;
     setError("");
     if (!selectedCity) { setError(c.requiredCity); return; }
+    if (isMinor && !guardianConsent) { setError(c.guardian); return; }
     setSaving(true);
     try {
       const res = await fetch("/api/birth-details", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",
-        body: JSON.stringify({ firstName, dateOfBirth, timeKnown, birthTime: timeKnown ? birthTime : null, placeId: selectedCity.id }),
+        body: JSON.stringify({ firstName, dateOfBirth, timeKnown, birthTime: timeKnown ? birthTime : null, placeId: selectedCity.id, guardianConsent: isMinor && guardianConsent }),
       });
-      const json = await res.json() as { ok?: boolean; error?: string; next?: string };
+      const json = await readApiJSON<{ ok?: boolean; error?: string; next?: string }>(res, c.apiError);
       if (!res.ok || !json.ok) throw new Error(json.error || c.failed);
       router.push((json.next || "/birth-details/saved") + "?lang=" + language);
     } catch (e) {
@@ -161,7 +170,7 @@ function BirthDetailsForm() {
             </div>
             <div className="birth-field">
               <label htmlFor="birth-date">{c.date}</label>
-              <input id="birth-date" type="date" value={dateOfBirth} onChange={e=>setDateOfBirth(e.target.value)} min={minDOB} max={maxDOB} required />
+              <input id="birth-date" type="date" value={dateOfBirth} onChange={e=>{setDateOfBirth(e.target.value);setGuardianConsent(false)}} min={minDOB} max={maxDOB} required />
             </div>
             <div className="birth-field">
               <label htmlFor="birth-time">{c.time}</label>
@@ -182,8 +191,9 @@ function BirthDetailsForm() {
               {searching && <p className="birth-hint" role="status">{c.locationWait}</p>}
               {searchError && <p className="birth-field-error" role="alert">{searchError}</p>}
               {!searching && search.length >= 3 && !selectedCity && cities.length===0 && !searchError && <p className="birth-hint">{c.locationEmpty}</p>}
-              <p className="birth-hint">{c.cityHint} <a target="_blank" rel="noopener noreferrer" href="https://www.geonames.org/">GeoNames ↗</a></p>
+              <p className="birth-hint">{c.cityHint}</p>
             </div>
+            {isMinor && <label className="birth-guardian"><input type="checkbox" required checked={guardianConsent} onChange={e=>setGuardianConsent(e.target.checked)}/><span>{c.guardian}</span></label>}
             {error && <div className="birth-error" role="alert">{error}</div>}
             <button className="birth-submit" type="submit" disabled={saving}>
               {saving ? c.saving : c.action} <span aria-hidden="true">↗</span>

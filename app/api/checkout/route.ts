@@ -2,6 +2,7 @@ import {createHash,randomUUID} from "node:crypto";
 import {NextRequest,NextResponse} from "next/server";
 import {BIRTH_COOKIE,readBirthDraft} from "@/lib/birth-session";
 import type {JourneyDraft} from "@/lib/context";
+import { isMinorBirthDate } from "@/lib/birth";
 import {dodoGet,dodoPost,assertProduct,getDodoProductId,verifiedCheckoutURL,type DodoProduct} from "@/lib/payments/dodo";
 import {createOrder,encodeDraft,limitAttempts,patchOrder} from "@/lib/payments/order-store";
 import {CHECKOUT_COOKIE,issueCheckoutOrder} from "@/lib/payments/checkout-cookie";
@@ -35,6 +36,8 @@ export async function POST(request:NextRequest){
   return NextResponse.json({ok:false,error:"Invalid checkout information."},{status:400,headers});
  }
  const obj=raw&&typeof raw==="object"&&!Array.isArray(raw)?raw as Record<string,unknown>:null;
+ if(obj?.adultPayerConfirmed!==true)return NextResponse.json({ok:false,error:"An adult payer (18+) must confirm the purchase."},{status:400,headers});
+ if(isMinorBirthDate(draft.dateOfBirth)&&draft.guardianConsent!==true)return NextResponse.json({ok:false,error:"Parent/guardian approval is required for this report."},{status:403,headers});
  const email=typeof obj?.email==="string"?obj.email.trim().toLowerCase():"";
  if(email.length>254||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
   return NextResponse.json({ok:false,error:"Enter a valid receipt email."},{status:400,headers});

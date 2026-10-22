@@ -22,3 +22,11 @@ test("case insensitive search works in other countries",async()=>{
  assert.deepEqual(a,b);
  assert.ok(a.some(x=>x.country==="United Kingdom"));
 });
+
+test("Siwan city in India is searchable with an offline timezone",async()=>{
+ const matches=await searchCities("Siwan");
+ const city=matches.find(x=>x.name.toLowerCase()==="siwan"&&x.country==="India");
+ assert.ok(city,"Siwan must appear in offline results");
+ const place=await getVerifiedPlace(city.id);
+ assert.equal(place.timezone,"Asia/Kolkata");
+});
