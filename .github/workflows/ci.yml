@@ -25,7 +25,7 @@ jobs:
         run: npm run build
       - name: Smoke test real city lookup API (Siwan)
         run: |
-          npm run start -- -p 3000 >/tmp/lovora-start.log 2>&1 &
+          BIRTH_SESSION_SECRET=ci-only-test-key-please-never-use-in-real-environments-1234 npm run start -- -p 3000 >/tmp/lovora-start.log 2>&1 &
           server_pid=$!
           trap 'kill "$server_pid" 2>/dev/null || true' EXIT
           success=0
@@ -41,3 +41,5 @@ jobs:
             exit 1
           fi
           node -e "const data=JSON.parse(require('node:fs').readFileSync('/tmp/lovora-siwan.json','utf8'));if(!Array.isArray(data.results)||!data.results.some(c=>c.name.toLowerCase()==='siwan'&&c.country==='India'))throw Error('Siwan was not returned by API')"
+      - name: Smoke test birth-details POST and encrypted session
+        run: node scripts/smoke-birth.mjs

@@ -1,0 +1,35 @@
+/** End-to-end Next HTTP test for the form's actual POST route (CI only). */
+import assert from "node:assert/strict";
+const base = "http://127.0.0.1:3000";
+async function jsonResponse(path,options){
+ const response = await fetch(base+path,options);
+ const type = response.headers.get("content-type")||"";
+ assert.match(type,/application\/json/i,path+" must send JSON (not an HTML error page), HTTP "+response.status);
+ return [response,await response.json()];
+}
+const [cityResponse,cityData]=await jsonResponse("/api/places?q=Siwan");
+assert.equal(cityResponse.status,200);
+const city=cityData.results.find(c=>c.name==="Siwan"&&c.country==="India");
+assert.ok(city,"Must resolve Siwan from actual API");
+const payload={firstName:"Preview Test",dateOfBirth:"2009-08-13",timeKnown:false,birthTime:null,
+  placeId:city.id,guardianConsent:true};
+const [response,body]=await jsonResponse("/api/birth-details",{
+ method:"POST",headers:{"content-type":"application/json","origin":base},body:JSON.stringify(payload)
+});
+assert.equal(response.status,200,JSON.stringify(body));
+assert.equal(body.ok,true);
+const cookie=response.headers.get("set-cookie");
+assert.ok(cookie?.includes("lovora_birth_draft="),"Session cookie must be issued");
+assert.match(cookie,/HttpOnly/);
+const [saved,stored]=await jsonResponse("/api/birth-details",{
+ headers:{cookie:cookie.split(";")[0]}
+});
+assert.equal(saved.status,200,JSON.stringify(stored));
+assert.equal(stored.draft.place.name,"Siwan");
+assert.equal(stored.draft.guardianConsent,true);
+const [denied,bad]=await jsonResponse("/api/birth-details",{
+ method:"POST",headers:{"content-type":"application/json","origin":base},
+ body:JSON.stringify({...payload,guardianConsent:false})
+});
+assert.equal(denied.status,400,JSON.stringify(bad));
+console.log("Birth-details POST, encrypted cookie and GET are working for Siwan.");

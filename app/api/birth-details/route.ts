@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateBirthInput } from "@/lib/birth";
 import { getVerifiedPlace } from "@/lib/city-directory";
-import { allowPublicCost } from "@/lib/traffic-guard";
 import { BIRTH_COOKIE, BIRTH_TTL_SECONDS, readBirthDraft, sealBirthDraft } from "@/lib/birth-session";
 import type { BirthDraft } from "@/lib/birth";
 
@@ -35,7 +34,6 @@ export async function POST(request: NextRequest) {
   const validated = validateBirthInput(body);
   if (!validated.ok) return NextResponse.json({ ok: false, error: validated.error }, { status: 400, headers });
   try {
-    if(!await allowPublicCost(request,"birth"))return NextResponse.json({ok:false,error:"Too many birthplace lookups. Please retry later."},{status:429,headers});
     const place = await getVerifiedPlace(validated.data.placeId);
     const draft: BirthDraft = {
       firstName: validated.data.firstName,
@@ -54,8 +52,21 @@ export async function POST(request: NextRequest) {
     });
     return response;
   } catch (error) {
-    console.error("Birth-details processing error:", error instanceof Error ? error.message : "Unknown error");
-    return NextResponse.json({ ok: false, error: "Unable to save your details. Check service configuration or try again." }, { status: 503, headers });
+    const cause = error instanceof Error ? error.message : "UNKNOWN";
+    console.error("Birth-details processing error:", cause);
+    if (cause.includes("BIRTH_SESSION_SECRET")) {
+      return NextResponse.json({ ok: false, code: "SESSION_SECRET_MISSING",
+        error: "Secure session is not configured. Add BIRTH_SESSION_SECRET (at least 32 characters) to your app server secrets, then restart the preview."
+      }, { status: 503, headers });
+    }
+    if (cause === "CITY_NOT_FOUND_IN_DIRECTORY" || cause === "INVALID_CITY_ID") {
+      return NextResponse.json({ ok: false, code: "CITY_SELECTION_EXPIRED",
+        error: "The selected birthplace is no longer valid. Search and select your city again."
+      }, { status: 400, headers });
+    }
+    return NextResponse.json({ ok: false, code: "BIRTH_SAVE_UNAVAILABLE",
+      error: "Unable to save your birth details right now. Please retry or check the app server logs."
+    }, { status: 503, headers });
   }
 }
 

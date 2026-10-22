@@ -8,3 +8,8 @@ test("valid JSON result is parsed normally",async()=>{
  const result=await readApiJSON<{results:string[]}>(Response.json({results:["Siwan"]}),"error");
  assert.deepEqual(result.results,["Siwan"]);
 });
+
+test("non-JSON POST error reports HTTP status instead of raw HTML",async()=>{
+ const html=new Response("<html>internal failure</html>",{status:500,headers:{"content-type":"text/html"}});
+ await assert.rejects(()=>readApiJSON(html,"Birth API unavailable"),/Birth API unavailable.*HTTP 500/);
+});

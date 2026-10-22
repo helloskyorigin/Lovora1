@@ -23,7 +23,8 @@ const messages = {
     privacy: "Private by design. Your details are saved in an encrypted 24-hour browser session, not an account.",
     age: "Ages 14+. Under 18? Parent/guardian permission and an adult payer are required.",
     guardian: "My parent or guardian has reviewed this experience and agrees to sharing my birth details.",
-    apiError: "The app API is not responding. Install updated dependencies and restart the preview, then retry.",
+    apiError: "Location search returned a web page instead of API data. Restart the preview.",
+    saveApiError: "The birth-details API returned a web page instead of JSON. Restart the AI Studio preview and check its server logs.",
     action: "Continue my story", saving: "Saving your birth moment...",
     locationWait: "Searching for places...", locationEmpty: "No cities found. Try the nearest major city.",
     footer: "Traditional Vedic astrology for reflection, not certain predictions.",
@@ -42,7 +43,8 @@ const messages = {
     privacy: "आपके विवरण 24 घंटे तक एन्क्रिप्टेड सेशन में रहते हैं, कोई अकाउंट नहीं बनता।",
     age: "14+ के लिए। 18 वर्ष से कम आयु में अभिभावक की अनुमति और भुगतान के लिए वयस्क ज़रूरी है।",
     guardian: "मेरे अभिभावक ने यह सेवा देखी है और मेरे जन्म विवरण के उपयोग की अनुमति दी है।",
-    apiError: "ऐप का सर्वर सही जवाब नहीं दे रहा है। नए पैकेज इंस्टॉल करके प्रीव्यू दोबारा चालू करें।",
+    apiError: "शहर खोज API ने JSON के बजाय वेब पेज लौटाया। प्रीव्यू दोबारा शुरू करें।",
+    saveApiError: "जन्म विवरण API ने JSON के बजाय वेब पेज लौटाया। AI Studio प्रीव्यू दोबारा शुरू करें और सर्वर लॉग देखें।",
     action: "अपनी कहानी आगे बढ़ाएँ", saving: "विवरण सुरक्षित किए जा रहे हैं...",
     locationWait: "शहर खोज रहे हैं...", locationEmpty: "शहर नहीं मिला। नज़दीकी बड़े शहर से खोजें।",
     footer: "पारंपरिक वैदिक ज्योतिष व्यक्तिगत चिंतन के लिए है, पक्की भविष्यवाणी नहीं।",
@@ -127,7 +129,7 @@ function BirthDetailsForm() {
         credentials: "same-origin",
         body: JSON.stringify({ firstName, dateOfBirth, timeKnown, birthTime: timeKnown ? birthTime : null, placeId: selectedCity.id, guardianConsent: isMinor && guardianConsent }),
       });
-      const json = await readApiJSON<{ ok?: boolean; error?: string; next?: string }>(res, c.apiError);
+      const json = await readApiJSON<{ ok?: boolean; error?: string; next?: string }>(res, c.saveApiError);
       if (!res.ok || !json.ok) throw new Error(json.error || c.failed);
       router.push((json.next || "/birth-details/saved") + "?lang=" + language);
     } catch (e) {
