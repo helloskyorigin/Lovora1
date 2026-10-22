@@ -15,6 +15,7 @@ function ScanFlow(){
  const [problem,setProblem]=useState("");
  useEffect(()=>{
   let closed=false;
+  const started=Date.now();
   (async()=>{
    try{
     const res=await fetch("/api/insight",{
@@ -33,6 +34,9 @@ function ScanFlow(){
     setStatus(hi?"आपकी कहानी खोल रहे हैं…":"Opening your story…");
     setProblem(err instanceof Error?err.message:"");
    }
+   // Make the purposeful scan screen visible even when a cached response is instant.
+   const remaining=Math.max(0,1300-(Date.now()-started));
+   if(remaining)await new Promise<void>(resolve=>window.setTimeout(resolve,remaining));
    if(!closed)router.replace("/insight?lang="+lang);
   })();
   return ()=>{closed=true;};

@@ -121,10 +121,10 @@ function ResultPage(){
       <div className="lovora-result__offer"><span>✦ {c.offer}</span><div><del>{c.oldPrice}</del><strong>₹149</strong></div></div>
       <h2>{c.unlocked}</h2>
       <p>{c.premiumIntro}</p>
+      {verified?<CheckoutForm lang={lang}/>:<p className="lovora-result__notice">{c.noPay}</p>}
       <div className="lovora-result__blurred" aria-hidden="true"><span>01</span><div><b>{c.teaserOne}</b><i/></div><span>↗</span></div>
       <div className="lovora-result__blurred" aria-hidden="true"><span>02</span><div><b>{c.teaserTwo}</b><i/></div><span>↗</span></div>
       <div className="lovora-result__blurred" aria-hidden="true"><span>03</span><div><b>{c.teaserThree}</b><i/></div><span>↗</span></div>
-      {verified?<CheckoutForm lang={lang}/>:<p className="lovora-result__notice">{c.noPay}</p>}
       <Link className="lovora-result__sample" href="/report/sample">{c.preview} ↗</Link>
      </section>
      <p className="lovora-result__attribution"><a href="https://www.prokerala.com/" target="_blank" rel="noopener noreferrer">{c.powered}</a></p>

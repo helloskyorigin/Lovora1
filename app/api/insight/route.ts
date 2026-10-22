@@ -18,7 +18,7 @@ export async function POST(request:NextRequest){
  if(!saved)return guide("SESSION_UNAVAILABLE");
  const draft:JourneyDraft={...saved,relationship:saved.relationship||{status:"private",interest:"path"}};
  if(!draft.birthTime||!draft.timeKnown)return guide("BIRTH_TIME_REQUIRED");
- if(draft.preview)return NextResponse.json({ok:true,mode:"verified",insight:draft.preview},{headers});
+ if(draft.preview?.marriagePath?.available)return NextResponse.json({ok:true,mode:"verified",insight:draft.preview},{headers});
  try{
   if(!await allowPublicCost(request,"insight"))return guide("RATE_LIMIT");
  }catch(e){

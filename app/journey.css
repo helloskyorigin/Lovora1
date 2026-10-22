@@ -141,3 +141,7 @@
 .journey__scan-language{font-size:11px;color:#d8c8d9}
 @media(max-width:600px){.lovora-result{padding-top:21px}.lovora-result__intro{padding-bottom:18px}.lovora-result__verdict{padding:21px 19px}.lovora-result__locked{padding:19px 18px}.lovora-result__intro h1{font-size:clamp(43px,12vw,59px)}.lovora-scan__orbit{width:140px;height:140px;margin-bottom:35px}.lovora-scan{padding-top:35px}.lovora-scan h1{font-size:clamp(44px,11vw,58px)}}
 @media(prefers-reduced-motion:reduce){.lovora-scan__orbit span,.lovora-scan__orbit i{animation:none}}
+
+/* Premium action immediately after the curiosity teaser, before extended chapter details. */
+.lovora-result__locked .lovora-checkout{margin:18px 0 22px}
+@media(max-width:600px){.lovora-result__locked .lovora-checkout{margin:14px 0 17px}}
