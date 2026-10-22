@@ -145,3 +145,30 @@
 /* Premium action immediately after the curiosity teaser, before extended chapter details. */
 .lovora-result__locked .lovora-checkout{margin:18px 0 22px}
 @media(max-width:600px){.lovora-result__locked .lovora-checkout{margin:14px 0 17px}}
+
+/* Conversion choice displayed immediately after scanning, not buried below a long free report. */
+.lovora-choice-backdrop{position:fixed;inset:0;z-index:1000;background:#140c22dd;backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:18px;overflow:auto}
+.lovora-choice{position:relative;width:min(448px,100%);max-height:min(92dvh,800px);overflow:auto;padding:clamp(22px,5vw,35px);background:radial-gradient(ellipse at 50% 8%,#563259,#2a1b3d 67%,#21162e);border:1px solid #e5bdd463;border-radius:23px;color:#fce5ee;text-align:center;box-shadow:0 30px 120px #110a1ab0}
+.lovora-choice__eyebrow{font-size:10px;letter-spacing:.15em;color:#e8c590;font-weight:700}
+.lovora-choice__ornament{font-size:56px;margin:14px auto;color:#f4bdd6;line-height:1}
+.lovora-choice h2{font:500 clamp(41px,9vw,61px)/1.04 'Cormorant Garamond',Georgia,serif;letter-spacing:-.03em;color:#fff0e8;margin:17px auto 12px}
+.lovora-choice>p:not(.lovora-choice__eyebrow){font-size:12px;line-height:1.8;color:#dfc8dc;margin:0 auto 24px}
+.lovora-choice__free,.lovora-choice__premium{width:100%;display:flex;flex-direction:column;align-items:center;gap:7px;padding:18px 13px;border-radius:13px;cursor:pointer;font-family:'DM Sans',Arial,sans-serif}
+.lovora-choice__free{background:#ffffff0c;border:1px solid #e5c2d78d;color:#ffe5ef}
+.lovora-choice__premium{background:#f1bdd6;border:1px solid #f1bdd6;color:#30203c;margin-top:11px}
+.lovora-choice__free:hover{background:#ffffff1c}
+.lovora-choice__premium:hover{background:#ffd4e6}
+.lovora-choice__free strong,.lovora-choice__premium strong{font-size:14px}
+.lovora-choice__free span,.lovora-choice__premium span{font-size:11px;opacity:.85}
+.lovora-choice__premium del{font-size:11px;opacity:.6;margin-left:5px}
+.lovora-choice__fine{font-size:10px!important;line-height:1.65!important;margin:17px 0 0!important;color:#cbb7d2!important}
+.lovora-choice__back{display:block;border:0;background:transparent;color:#ead0e4;padding:5px 0;cursor:pointer;font-size:12px;text-align:left}
+.lovora-choice .lovora-checkout{text-align:left;margin:15px 0 0}
+.lovora-choice .lovora-checkout__button{width:100%}
+.lovora-choice__hold{background:#fff0f50b;border:1px solid #e6b8ca56;border-radius:13px;padding:19px;margin-top:15px}
+.lovora-choice__hold p{font-size:12px;line-height:1.8;color:#ecd2df}
+.lovora-choice__hold button{background:#ebbbd1;color:#2d1a39;border:0;border-radius:9px;padding:13px 16px;font-weight:700;cursor:pointer}
+.lovora-result__main-unlock{display:flex;align-items:center;justify-content:space-between;width:100%;background:#efb9d0;color:#302035;border:0;border-radius:12px;padding:17px 20px;margin:18px 0;font:700 14px 'DM Sans',Arial,sans-serif;cursor:pointer}
+.lovora-result__main-unlock:hover{background:#ffd0e5}
+.lovora-result__main-unlock span{font-size:20px}
+@media(max-width:600px){.lovora-choice-backdrop{padding:12px}.lovora-choice{padding:22px 18px;border-radius:18px}.lovora-result__main-unlock{margin-top:15px}}

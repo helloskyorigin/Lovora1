@@ -23,7 +23,9 @@ function publicOrigin(request:NextRequest){
  const url=new URL(base);
  if(url.username||url.password||url.pathname!=="/"||url.search||url.hash)throw new Error("APP_ORIGIN_INVALID");
  if(url.protocol!=="https:" && !(process.env.NODE_ENV!=="production"&&url.origin==="http://localhost:3000"))throw new Error("APP_ORIGIN_INVALID");
- if(new URL(request.url).origin!==url.origin)throw new Error("APP_ORIGIN_INVALID");
+ // Proxy previews can present an internal host; configured publicOrigin is the
+ // only checkout return host and browser Origin is checked separately on POST.
+ // Never derive a checkout redirect from untrusted Host headers.
  return url.origin;
 }
 export async function POST(request:NextRequest){

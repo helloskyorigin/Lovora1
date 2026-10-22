@@ -2,6 +2,7 @@
 import {Suspense,useCallback,useEffect,useState} from "react";
 import {useRouter,useSearchParams} from "next/navigation";
 import Link from "next/link";
+import {getBirthSessionHeaders} from "@/lib/client-birth-session";
 import "./return.css";
 type State="checking"|"pending"|"paid"|"generating"|"ready"|"failed"|"revoked"|"needs_support"|"error";
 function ReturnContent(){

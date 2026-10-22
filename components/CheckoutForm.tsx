@@ -17,7 +17,9 @@ export function CheckoutForm({lang}:{lang:"en"|"hi"}){
   setBusy(true);setError("");
   try{
    const res=await fetch("/api/checkout",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json",...getBirthSessionHeaders()},body:JSON.stringify({email,adultPayerConfirmed:ack})});
-   const data=await res.json() as {ok?:boolean;checkoutUrl?:string;error?:string};
+   const data=await (res.headers.get("content-type")||"").includes("application/json")
+    ? await res.json() as {ok?:boolean;checkoutUrl?:string;error?:string}
+    : {ok:false,error:"Checkout service is not available in this preview."};
    if(!res.ok||!data.ok||!data.checkoutUrl)throw new Error(data.error||"Checkout unavailable.");
    window.location.assign(data.checkoutUrl);
   }catch(e){setError(e instanceof Error?e.message:"Could not open checkout.");setBusy(false);}

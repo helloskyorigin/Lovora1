@@ -37,7 +37,7 @@ function ScanFlow(){
    // Make the purposeful scan screen visible even when a cached response is instant.
    const remaining=Math.max(0,1300-(Date.now()-started));
    if(remaining)await new Promise<void>(resolve=>window.setTimeout(resolve,remaining));
-   if(!closed)router.replace("/insight?lang="+lang);
+   if(!closed)router.replace("/insight?lang="+lang+"&choice=1");
   })();
   return ()=>{closed=true;};
  },[router,hi,lang]);

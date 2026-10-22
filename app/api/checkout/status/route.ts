@@ -1,3 +1,4 @@
+import {isSameOriginRequest} from "@/lib/request-origin";
 import {NextRequest,NextResponse} from "next/server";
 import {CHECKOUT_COOKIE,parseCheckoutOrder} from "@/lib/payments/checkout-cookie";
 import {readOrder} from "@/lib/payments/order-store";
@@ -12,8 +13,7 @@ export const maxDuration=60;
 const headers={"Cache-Control":"private, no-store"};
 
 export async function POST(request:NextRequest){
- const origin=request.headers.get("origin");
- if(origin&&origin!==new URL(request.url).origin)return NextResponse.json({ok:false,error:"Invalid origin."},{status:403,headers});
+ if(!isSameOriginRequest(request))return NextResponse.json({ok:false,error:"Invalid origin."},{status:403,headers});
  const id=parseCheckoutOrder(request.cookies.get(CHECKOUT_COOKIE)?.value);
  let requested:string|null=null;
  try {const raw=await request.json() as {orderId?:unknown};requested=typeof raw.orderId==="string"?raw.orderId:null;}catch{}
