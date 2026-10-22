@@ -4,7 +4,8 @@ export type SignName = "Aries"|"Taurus"|"Gemini"|"Cancer"|"Leo"|"Virgo"|"Libra"|
 export type PlanetName = "Sun"|"Moon"|"Mercury"|"Venus"|"Mars"|"Jupiter"|"Saturn"|"Rahu"|"Ketu"|"Ascendant";
 export type VerifiedPlanet = { name:PlanetName; id:number; sign:SignName; signIndex:number; wholeSignHouse:number; degree:number|null; isRetrograde:boolean|null };
 export type ChartEvidence = { id:string; title:string; observation:string; meaning:string; type:"relationship"|"support"|"balance"|"timing"; planets:PlanetName[] };
-export type Chapter = { id:string; number:number; eyebrow:string; title:string; introduction:string; paragraphs:string[]; evidenceIds:string[]; note?:string };
+export type DeepDive = {title:string;observation:string;meaning:string;reflection:string;evidenceIds:string[]};
+export type Chapter = { id:string; number:number; eyebrow:string; title:string; introduction:string; paragraphs:string[]; evidenceIds:string[]; note?:string; deepDive?:DeepDive[] };
 export type Timing = { status:"supported"|"not_available"; description:string; windows:{name:string;start:string;end:string;why:string}[] };
 export type MarriageStoryReport = {
   version:1;

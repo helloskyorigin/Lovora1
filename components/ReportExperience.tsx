@@ -103,6 +103,17 @@ export function ReportExperience({report,demo=false}:{report:MarriageStoryReport
                 <p className="report-chapter__lead">{chapter.introduction}</p>
               </div>
               {chapter.paragraphs.map((paragraph,idx)=><p className="report-chapter__paragraph" key={idx}>{paragraph}</p>)}
+              {!!chapter.deepDive?.length&&<section className="report-depth" aria-label={hi?"आपका व्यक्तिगत विश्लेषण":"Your personalized analysis"}>
+                <div className="report-depth__heading"><span>✧</span><div><p>{hi?"सत्यापित ग्रहों से":"FROM YOUR CHART"}</p><h3>{hi?"आपके संकेत, गहराई से":"A closer look at your story"}</h3></div></div>
+                {chapter.deepDive.map((point,i)=><div className="report-depth__item" key={point.title}>
+                  <span className="report-depth__index">{String(i+1).padStart(2,"0")}</span><div>
+                  <h4>{point.title}</h4>
+                  <p className="report-depth__fact"><strong>{hi?"कुंडली का आधार":"THE CHART SAYS"}</strong>{point.observation}</p>
+                  <p className="report-depth__meaning">{point.meaning}</p>
+                  <div className="report-depth__question"><span>✦ {hi?"खुद से पूछें":"YOUR REFLECTION"}</span><p>{point.reflection}</p></div>
+                  </div>
+                </div>)}
+              </section>}
 
               {chapter.id==="timing"&&view.timing.windows.length>0&&
                 <div className="report-timeline">

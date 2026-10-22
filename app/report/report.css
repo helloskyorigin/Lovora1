@@ -165,3 +165,21 @@
 .report-share-dialog__status{font-size:11px;line-height:1.6;color:#eecb9e;margin:12px 0 0}
 @media(max-width:760px){.report-header__right{gap:6px}.report-header__brand{font-size:15px}.report-header__print,.report-header__share{padding:9px 9px;font-size:11px}.report-header__inner{gap:8px}.report-demo-label{display:none}}
 @media print{.report-header__share,.report-share-overlay{display:none!important}}
+
+.report-depth{margin:32px 0 46px;border:1px solid #ead7e0;border-radius:16px;background:#fffdf9;overflow:hidden}
+.report-depth__heading{display:flex;align-items:center;gap:15px;background:#49304f;color:#faecf3;padding:20px 25px}
+.report-depth__heading>span{font-size:32px;color:#e9c898}
+.report-depth__heading p{font-size:9px;font-weight:700;letter-spacing:.19em;color:#e7c5d6;margin:0 0 8px}
+.report-depth__heading h3{font-size:30px;line-height:1.1;margin:0}
+.report-depth__item{display:grid;grid-template-columns:35px minmax(0,1fr);gap:14px;border-top:1px solid #ebdce3;padding:24px 25px}
+.report-depth__index{font-family:'Cormorant Garamond',Georgia,serif;color:#aa7c95;font-size:26px}
+.report-depth__item h4{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:32px;line-height:1.07;margin:0 0 14px;color:#4d3350}
+.report-depth__fact{color:#785d70;font-size:12px;line-height:1.8;margin:0 0 13px}
+.report-depth__fact strong{font-size:9px;color:#a27395;display:block;letter-spacing:.14em;margin:0 0 4px}
+.report-depth__meaning{font-size:13px;line-height:1.93;color:#5e4c5c;margin:0 0 16px}
+.report-depth__question{border-left:2px solid #c58eab;border-radius:0 8px 8px 0;background:#f8ebf0;padding:13px 16px}
+.report-depth__question span{font-size:9px;font-weight:700;letter-spacing:.13em;color:#a37795}
+.report-depth__question p{font-size:12px;line-height:1.75;color:#543d52;margin:7px 0 0}
+.report-site--hi .report-depth__item h4,.report-site--hi .report-depth__heading h3{font-family:'Noto Serif Devanagari',Georgia,serif;line-height:1.4;font-size:24px}
+@media(max-width:760px){.report-depth__heading{padding:18px}.report-depth__item{padding:17px 14px;grid-template-columns:24px minmax(0,1fr);gap:9px}.report-depth__item h4{font-size:26px}.report-depth__meaning{font-size:12px}}
+@media print{.report-depth__heading{background:#f4e8ef!important;color:#3f2949!important;print-color-adjust:exact}.report-depth__heading p{color:#68516b!important}.report-depth__item{break-inside:avoid}.report-depth__question{background:#f5edf2!important;print-color-adjust:exact}}

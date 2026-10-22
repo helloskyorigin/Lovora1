@@ -1,4 +1,5 @@
 import type { JourneyDraft } from "../context";
+import {addNarrativeDepth} from "./depth";
 import type { Chapter, ChartEvidence, MarriageStoryReport, PlanetName, RawChartData, RawPosition, SignName, Timing, VerifiedPlanet } from "./types";
 
 export const SIGNS: SignName[] = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
@@ -210,7 +211,7 @@ export function createMarriageReport(draft:JourneyDraft,raw:RawChartData, report
       evidenceIds:["asc","houses"],note:"This report is for personal exploration and entertainment."},
   ];
   if(chapters.length!==7||chapters.some(c=>c.paragraphs.length<2))throw new Error("INVALID_REPORT_STRUCTURE");
-  return {
+  const report:MarriageStoryReport={
     version:1,id:reportId,createdAt:createdAt.toISOString(),
     person:{firstName:draft.firstName,birthDate:draft.dateOfBirth,birthTime:draft.birthTime,
       birthplace:[draft.place.name,draft.place.region,draft.place.country].filter(Boolean).join(", "),timezone:draft.place.timezone},
@@ -219,5 +220,5 @@ export function createMarriageReport(draft:JourneyDraft,raw:RawChartData, report
     chart:{rising:rising.sign,fifth,seventh,fifthLord,seventhLord,planets,navamsa},
     marriagePath:{headline,summary,signals,caveat:"No marriage-type probability or guaranteed outcome is estimated."},
     timing,evidence,chapters,disclaimer:NOTES.disclaimer,
-  };
+  };  return addNarrativeDepth(report,"en");
 }
