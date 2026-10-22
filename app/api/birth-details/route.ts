@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { validateBirthInput } from "@/lib/birth";
 import { getVerifiedPlace } from "@/lib/city-directory";
 import { BIRTH_COOKIE, BIRTH_TTL_SECONDS, readBirthDraftFromRequest, sealBirthDraft } from "@/lib/birth-session";
-import type { BirthDraft } from "@/lib/birth";
+import type { JourneyDraft } from "@/lib/context";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
   if (!validated.ok) return NextResponse.json({ ok: false, error: validated.error }, { status: 400, headers });
   try {
     const place = await getVerifiedPlace(validated.data.placeId);
-    const draft: BirthDraft = {
+    const draft: JourneyDraft = {
       firstName: validated.data.firstName,
       dateOfBirth: validated.data.dateOfBirth,
       birthTime: validated.data.birthTime,
@@ -43,6 +43,7 @@ export async function POST(request: NextRequest) {
       guardianConsent: validated.data.guardianConsent,
       place,
       savedAt: Date.now(),
+      relationship: {status:"private",interest:"path"},
     };
     const token = sealBirthDraft(draft);
     const response = NextResponse.json({ ok: true, next: "/insight", sessionToken: token }, { headers });

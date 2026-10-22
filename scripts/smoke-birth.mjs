@@ -39,3 +39,21 @@ const [crossSite,crossBody]=await jsonResponse("/api/birth-details",{
  body:JSON.stringify(payload)
 });
 assert.equal(crossSite.status,403,JSON.stringify(crossBody));
+
+assert.equal(body.next,"/insight");
+assert.ok(typeof body.sessionToken==="string"&&body.sessionToken.split(".").length===3);
+const [fromToken,tokenPayload]=await jsonResponse("/api/birth-details",{headers:{"x-lovora-birth-session":body.sessionToken}});
+assert.equal(fromToken.status,200,JSON.stringify(tokenPayload));
+assert.equal(tokenPayload.draft.place.name,"Siwan");
+const [guide,guideResult]=await jsonResponse("/api/insight",{
+ method:"POST",headers:{"content-type":"application/json","origin":base,"x-lovora-birth-session":body.sessionToken}
+});
+assert.equal(guide.status,200,JSON.stringify(guideResult));
+assert.equal(guideResult.mode,"guide");
+assert.equal(guideResult.reason,"BIRTH_TIME_REQUIRED");
+assert.equal("insight" in guideResult,false,"Generic guide must not fabricate planetary positions");
+const [malicious,maliciousResult]=await jsonResponse("/api/insight",{
+ method:"POST",headers:{"origin":"https://attacker.example","sec-fetch-site":"cross-site","x-lovora-birth-session":body.sessionToken}
+});
+assert.equal(malicious.status,403,JSON.stringify(maliciousResult));
+console.log("New direct birth-to-insight flow and cookie-free encrypted session path work.");

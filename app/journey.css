@@ -74,3 +74,24 @@
 @media(max-width:780px){.journey__grid{grid-template-columns:1fr;gap:18px;padding:40px 0 70px}.journey__celestial{width:210px;height:160px;margin:8px 0}.journey__ring{width:200px;height:90px}.journey__heart{font-size:70px}.journey__star{left:8px;top:24px}.journey__star--two{right:15px;bottom:20px}.journey__title{font-size:clamp(52px,10vw,71px)}.journey__panel{max-width:560px}.journey__result{padding:54px 0}}
 @media(max-width:520px){.journey__wrap{width:calc(100% - 36px)}.journey__top{min-height:70px}.journey__brand{font-size:14px}.journey__back{font-size:0}.journey__back span{font-size:20px}.journey__language{padding:8px 11px}.journey__grid{padding-top:30px}.journey__celestial{display:none}.journey__title{margin:18px 0;font-size:clamp(49px,12vw,65px)}.journey__description{font-size:13px}.journey__panel{padding:22px 19px;border-radius:17px}.journey__options{gap:8px}.journey__option{min-height:75px;padding:12px 9px;gap:7px}.journey__option-label{font-size:11px}.journey__option-symbol{font-size:17px}.journey__result{padding:54px 0}.journey__reading{padding:25px 20px}.journey__premium{padding:23px 20px}.journey__result-heading .journey__title{font-size:51px}}
 @media(prefers-reduced-motion:reduce){.journey:after,.journey__ring,.journey__heart,.journey__wheel:before,.journey__wheel span{animation:none!important}.journey__button,.journey__option{transition:none}}
+
+/* Dedicated Love vs Arranged Marriage exploration. Never imply a guaranteed outcome. */
+.journey--love-choice .journey__result{max-width:920px;margin-inline:auto}
+.journey--love-choice .journey__result-heading{text-align:center;padding:38px 0 28px}
+.journey--love-choice .journey__title{font-size:clamp(50px,8vw,92px);line-height:1.04}
+.journey--love-choice .journey__result-heading>p:last-child{max-width:610px;margin:0 auto;line-height:1.7}
+.lovora-two-paths{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:22px 0 24px}
+.lovora-path{padding:30px 25px;min-height:210px;border:1px solid #efd1e344;border-radius:18px;background:linear-gradient(140deg,#5131539c,#36204480);box-shadow:0 14px 38px #100a201f}
+.lovora-path:nth-child(2){background:linear-gradient(140deg,#51406b88,#322144a8)}
+.lovora-path__icon{font-size:30px;color:#f2bfd6}
+.lovora-path h2{font:500 clamp(30px,4.2vw,45px)/1.1 'Cormorant Garamond',Georgia,serif;color:#fff0e9;margin:14px 0}
+.lovora-path p{color:#e7d6e6;font-size:13px;line-height:1.85}
+.lovora-verification{margin:24px 0;padding:27px 29px;border-radius:17px;border:1px solid #edc4d853;background:#362447a1}
+.lovora-verification h2{font:500 35px 'Cormorant Garamond',Georgia,serif;color:#fbe2ed;margin:10px 0}
+.lovora-verification p{color:#e6d6e5;font-size:13px;line-height:1.85}
+.lovora-verification small{display:block;color:#e5c4a9;font-size:11px}
+.lovora-verification__caveat{border-top:1px solid #e8c5dc35;padding-top:15px;margin-top:21px}
+.lovora-verification__notice{font-size:12px!important;color:#e9c99d!important;line-height:1.8}
+.lovora-secondary-action{display:inline-block;margin:12px 0;padding:11px 16px;border:1px solid #f0c8df70;border-radius:9px;background:#ffffff0b;color:#ffe0ef;font:600 12px 'DM Sans',Arial,sans-serif;cursor:pointer;text-decoration:none}
+.lovora-secondary-action:hover{background:#ffffff20}
+@media(max-width:640px){.lovora-two-paths{grid-template-columns:1fr;gap:11px}.lovora-path{min-height:0;padding:20px 22px}.lovora-verification{padding:21px 20px}.journey--love-choice .journey__result-heading{padding:18px 0 9px}.journey--love-choice .journey__title{font-size:clamp(44px,11vw,65px)}}
