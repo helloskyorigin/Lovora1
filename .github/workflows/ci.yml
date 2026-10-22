@@ -23,3 +23,21 @@ jobs:
         run: npm run test
       - name: Build
         run: npm run build
+      - name: Smoke test real city lookup API (Siwan)
+        run: |
+          npm run start -- -p 3000 >/tmp/lovora-start.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          success=0
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --show-error "http://127.0.0.1:3000/api/places?q=Siwan" -o /tmp/lovora-siwan.json; then
+              success=1
+              break
+            fi
+            sleep 2
+          done
+          if [ "$success" -ne 1 ]; then
+            cat /tmp/lovora-start.log
+            exit 1
+          fi
+          node -e "const data=JSON.parse(require('node:fs').readFileSync('/tmp/lovora-siwan.json','utf8'));if(!Array.isArray(data.results)||!data.results.some(c=>c.name.toLowerCase()==='siwan'&&c.country==='India'))throw Error('Siwan was not returned by API')"
