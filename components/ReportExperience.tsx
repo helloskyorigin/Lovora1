@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { MarriageStoryReport } from "@/lib/report/types";
 import {localizeReport,type ReportLanguage,hindiSign,hindiPlanet} from "@/lib/report/localize";
 import "@/app/report/report.css";
+import { ShareStoryModal } from "@/components/ShareStoryModal";
 
 const chapterGlyph=["♡","✧","✦","◷","☾","✳","❀"];
 const labels=["THE PATH","THE HEART","THE CONNECTION","THE SEASONS","LIFE TOGETHER","THE WHY","THE KEEPSAKE"];
@@ -14,6 +15,7 @@ export function ReportExperience({report,demo=false}:{report:MarriageStoryReport
   const [expandedEvidence,setExpandedEvidence]=useState<string[]>([]);
   const [active,setActive]=useState(0);
   const [lang,setLang]=useState<ReportLanguage>("en");
+  const [shareOpen,setShareOpen]=useState(false);
   const view=useMemo(()=>localizeReport(report,lang),[report,lang]);
   const hi=lang==="hi";
   const date=useMemo(()=>new Date(view.createdAt).toLocaleDateString("en-IN",{day:"numeric",month:"long",year:"numeric"}),[view.createdAt]);
@@ -30,7 +32,8 @@ export function ReportExperience({report,demo=false}:{report:MarriageStoryReport
         <div className="report-header__right">
           {demo&&<span className="report-demo-label">{hi?"सिर्फ़ उदाहरण":"ILLUSTRATIVE SAMPLE"}</span>}
           <button type="button" className="report-header__print" onClick={()=>setLang(hi?"en":"hi")}>{hi?"English":"हिंदी"}</button>
-          <button type="button" className="report-header__print" onClick={()=>window.print()} title="Save or print the report">⇩ <span>{hi?"PDF सेव करें":"Save PDF"}</span></button>
+          <button type="button" className="report-header__print" onClick={()=>window.print()} title={hi?"PDF के लिए प्रिंट में सेव करें":"Choose Save as PDF in the print dialog"}>↓ <span>{hi?"PDF सेव करें":"Save PDF"}</span></button>
+          <button type="button" className="report-header__share" onClick={()=>setShareOpen(true)}>↗ <span>{hi?"शेयर करें":"Share"}</span></button>
         </div>
       </div>
     </header>
@@ -138,7 +141,7 @@ export function ReportExperience({report,demo=false}:{report:MarriageStoryReport
                 })}
               </div>}
               {chapter.note&&<div className="report-chapter__footnote">✧ {chapter.note}</div>}
-              {index===6&&<div className="report-final"><span>✦</span><h3>{hi?"आगे की कहानी आप ही लिखेंगे।":"The rest of your story is yours to write."}</h3><button type="button" onClick={()=>window.print()}>{hi?"PDF सेव करें ↓":"Save your keepsake ↓"}</button></div>}
+              {index===6&&<div className="report-final"><span>✦</span><h3>{hi?"आगे की कहानी आप ही लिखेंगे।":"The rest of your story is yours to write."}</h3><div className="report-final__actions"><button type="button" onClick={()=>window.print()}>{hi?"PDF सेव करें ↓":"Save full PDF ↓"}</button><button type="button" className="report-final__share" onClick={()=>setShareOpen(true)}>{hi?"स्टोरी शेयर करें ↗":"Share story card ↗"}</button></div></div>}
             </article>
           ))}
           <div className="report-method">
@@ -151,6 +154,7 @@ export function ReportExperience({report,demo=false}:{report:MarriageStoryReport
         </div>
       </div>
     </div>
+    {shareOpen&&<ShareStoryModal demo={demo} report={view} lang={lang} onClose={()=>setShareOpen(false)}/>}
     <footer className="report-footer"><span>✦ LOVORA</span><p>{hi?"हर दिल की अपनी कहानी है।":"Every heart has its own story."}</p><Link href="/recover">{hi?"रिपोर्ट रिकवर करें":"Recover My Story"}</Link><Link href="/">{hi?"LOVORA पर वापस ↑":"Back to LOVORA ↑"}</Link></footer>
   </main>;
 }

@@ -136,3 +136,32 @@
 .report-site--demo .report-demo-alert{font-weight:500}
 @media print{.report-site--demo .report-demo-alert{display:block!important;background:#f9e4b9!important;color:#402b30!important;padding:10px 15px;text-align:center;border-bottom:2px solid #b47783;print-color-adjust:exact}
 .report-site--demo::after{content:'ILLUSTRATIVE SAMPLE · NOT YOUR PERSONAL CHART';position:fixed;z-index:1000;bottom:8px;left:0;right:0;text-align:center;color:#85566c;font:11px Arial,sans-serif;letter-spacing:.15em}}
+
+/* Export and privacy-respecting story sharing */
+.report-header__share{border:1px solid #efbdd278;border-radius:7px;padding:10px 14px;color:#2f1b36;background:#edb4d0;cursor:pointer;font-size:12px;font-weight:700}
+.report-header__share:hover{background:#ffd3e5}
+.report-final__actions{display:flex;justify-content:center;flex-wrap:wrap;gap:11px}
+.report-final button.report-final__share{background:transparent;color:#f4d3e5;border:1px solid #e7c0d783}
+.report-final button.report-final__share:hover{background:#fff1}
+.report-share-overlay{position:fixed;inset:0;z-index:500;background:#130c1fd9;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+.report-share-dialog{position:relative;width:min(440px,100%);max-height:calc(100dvh - 32px);overflow-y:auto;border:1px solid #ddb6d45d;border-radius:18px;padding:25px;background:#2b1a3d;color:#f9e7ee;box-shadow:0 25px 100px #10071d9c}
+.report-share-dialog__close{position:absolute;right:15px;top:13px;border:0;color:#ead6e6;background:#ffffff12;border-radius:50%;width:35px;height:35px;cursor:pointer;font-size:21px;line-height:1}
+.report-share-dialog__eyebrow{margin:0 36px 8px 0;font-size:10px;letter-spacing:.16em;color:#e9c88c}
+.report-share-dialog h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:37px;line-height:1.05;margin:0 25px 8px 0;color:#fff1e9}
+.report-share-dialog__intro{font-size:12px;color:#d9c4dd;line-height:1.7;margin:0 0 18px}
+.report-share-preview{margin:0 auto 16px;width:min(210px,75%);aspect-ratio:9/16;border:1px solid #e5b8cf78;border-radius:12px;padding:20px 13px;display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:space-between;background:radial-gradient(ellipse at 50% 38%,#754a82,#291739 63%,#160e29);color:#f8e4ec;box-shadow:0 10px 30px #110b2466}
+.report-share-preview__brand{font-weight:700;letter-spacing:.22em;font-size:12px;color:#f1d2df}
+.report-share-preview__orb{font-size:55px;color:#f7c6dd;text-shadow:0 0 36px #c18db0;line-height:1}
+.report-share-preview__title{font-family:'Cormorant Garamond',Georgia,serif;font-size:27px;line-height:1.05}
+.report-share-preview__detail{font-size:11px;line-height:1.45;color:#ffdcbd}
+.report-share-preview__url{font-size:9px;color:#e3c0dc;letter-spacing:.07em}
+.report-share-consent{display:flex;gap:10px;align-items:flex-start;margin:0 0 13px;font-size:12px;line-height:1.5;cursor:pointer;color:#f6e0ed}
+.report-share-consent input{accent-color:#ecb2ca;margin:3px 0 0;flex:none}
+.report-share-dialog__privacy{font-size:11px;color:#cdb8d5;line-height:1.6;margin:0 0 14px}
+.report-share-dialog__buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.report-share-dialog__buttons button{background:#e9b5d0;color:#34203a;padding:13px 10px;border:0;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer}
+.report-share-dialog__buttons button:nth-child(2){color:#f5ddec;background:#ffffff18;border:1px solid #dfbed27d}
+.report-share-dialog__buttons button:disabled{opacity:.55;cursor:wait}
+.report-share-dialog__status{font-size:11px;line-height:1.6;color:#eecb9e;margin:12px 0 0}
+@media(max-width:760px){.report-header__right{gap:6px}.report-header__brand{font-size:15px}.report-header__print,.report-header__share{padding:9px 9px;font-size:11px}.report-header__inner{gap:8px}.report-demo-label{display:none}}
+@media print{.report-header__share,.report-share-overlay{display:none!important}}
