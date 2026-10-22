@@ -7,6 +7,7 @@ import "./birth-details.css";
 import { isMinorBirthDate } from "@/lib/birth";
 import { readApiJSON } from "@/lib/api-response";
 import { rememberBirthSession,forgetBirthSession } from "@/lib/client-birth-session";
+import { forgetScanResult } from "@/lib/client-scan-result";
 
 type City = { id: number; name: string; region: string; country: string; display: string };
 type Lang = "en" | "hi";
@@ -132,6 +133,7 @@ function BirthDetailsForm() {
       });
       const json = await readApiJSON<{ ok?: boolean; error?: string; next?: string; sessionToken?:string }>(res, c.saveApiError);
       if (!res.ok || !json.ok) throw new Error(json.error || c.failed);
+      forgetScanResult();
       forgetBirthSession();
       rememberBirthSession(json.sessionToken);
       router.push((json.next || "/scanning") + "?lang=" + language);

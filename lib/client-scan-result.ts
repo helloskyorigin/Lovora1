@@ -8,13 +8,16 @@ export function rememberScanResult(value:Result):void{
   window.sessionStorage.setItem(KEY,JSON.stringify({value:safe,expires:Date.now()+10*60_000}));
  }catch{}
 }
+export function forgetScanResult():void{
+ try{if(typeof window!=="undefined")window.sessionStorage.removeItem(KEY);}catch{}
+}
 export function readScanResult():Result|null{
  try{
   if(typeof window==="undefined")return null;
   const raw=window.sessionStorage.getItem(KEY);
   if(!raw)return null;
-  window.sessionStorage.removeItem(KEY);
   const record=JSON.parse(raw) as {value:Result;expires:number};
-  return record?.expires>Date.now()&&record.value?.ok===true?record.value:null;
+  if(record?.expires>Date.now()&&record.value?.ok===true)return record.value;
+  forgetScanResult();return null;
  }catch{return null;}
 }
