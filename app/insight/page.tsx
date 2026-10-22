@@ -69,7 +69,7 @@ function ResultPage(){
  const choiceClosed=useCallback(()=>setChoice(false),[]);
  const once=useRef(false);
  const c=copy[lang];
- const load=useCallback(async()=>{
+ const load=useCallback(async():Promise<boolean>=>{
   try{
    const res=await fetch("/api/insight",{
     method:"POST",credentials:"same-origin",cache:"no-store",
@@ -79,8 +79,10 @@ function ResultPage(){
    if(!res.ok||!data.ok)throw new Error("Chart data unavailable");
    rememberBirthSession(data.sessionToken);
    setResult(data);
+   return data.mode==="verified"&&data.insight?.marriagePath?.available===true;
   }catch{
    setResult({ok:true,mode:"guide",reason:"SERVER_UNAVAILABLE"});
+   return false;
   }finally{setLoading(false);}
  },[]);
  useEffect(()=>{
@@ -128,7 +130,7 @@ function ResultPage(){
     </>}
    </article>
   </div>
-  {choice&&!loading&&<ResultChoiceModal lang={lang} verified={!!verified} onFree={choiceClosed}/>}
+  {choice&&!loading&&<ResultChoiceModal lang={lang} verified={!!verified} onFree={choiceClosed} onVerify={load}/>}
  </main>;
 }
 export default function InsightPage(){return <Suspense fallback={<main className="journey"/>}><ResultPage/></Suspense>}

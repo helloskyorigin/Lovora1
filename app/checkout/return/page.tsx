@@ -2,7 +2,6 @@
 import {Suspense,useCallback,useEffect,useState} from "react";
 import {useRouter,useSearchParams} from "next/navigation";
 import Link from "next/link";
-import {getBirthSessionHeaders} from "@/lib/client-birth-session";
 import "./return.css";
 type State="checking"|"pending"|"paid"|"generating"|"ready"|"failed"|"revoked"|"needs_support"|"error";
 function ReturnContent(){
@@ -48,10 +47,9 @@ function ReturnContent(){
    <h1>{title}</h1>
    <p>{body}</p>
    {(status==="pending"||status==="checking"||status==="generating")&&attempt>=24&&
-     <p>Verification is taking longer than expected. Your order remains saved; use Check again to refresh.</p>}
+     <p>Verification is taking longer than expected. Your order is saved. Use purchase recovery by email or contact support if it does not arrive.</p>}
    <div className="lovora-return__actions">
-    <button type="button" onClick={()=>{setAttempt(0);void refresh();}} disabled={status==="ready"}>Check payment again ↻</button>
-    <Link href="/insight">Back to free insight</Link>
+    {status==="failed"&&<Link href="/insight">Back to free insight</Link>}
     <Link href="/recover">Recover my purchase by email</Link>
     {status==="needs_support"&&<Link href="/support">Contact support</Link>}
    </div>
