@@ -1,0 +1,76 @@
+
+.journey {--night:#1d112f;--plum:#362043;--rose:#f0b6cf;--gold:#ebc791;--cream:#fff1e5;min-height:100svh;position:relative;overflow:hidden;background:radial-gradient(ellipse at 72% 32%,#472457 0%,transparent 43%),radial-gradient(ellipse at 12% 88%,#48284f 0%,transparent 37%),var(--night);color:var(--cream);font-family:'DM Sans',Arial,sans-serif}
+.journey:before{content:"";pointer-events:none;position:absolute;inset:0;background-image:radial-gradient(#edd4e3 .7px,transparent 1px);background-size:84px 84px;opacity:.13}
+.journey:after{content:"";position:absolute;left:-15%;top:4%;width:400px;height:400px;background:#ae6d9d2c;border-radius:50%;filter:blur(80px);pointer-events:none;animation:journey-breathe 13s ease-in-out infinite alternate}
+.journey__wrap{width:min(1050px,calc(100% - 52px));margin:auto;position:relative;z-index:1}
+.journey__top{min-height:85px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #ffffff1b}
+.journey__back{font-size:12px;color:#dfc9dd;display:flex;gap:8px;align-items:center}
+.journey__brand{font-weight:600;letter-spacing:.22em;color:#fff0e9;font-size:18px}
+.journey__brand span{color:var(--gold);letter-spacing:normal;margin-right:7px}
+.journey__language{font-size:12px;border:1px solid #d9b6d555;color:#eed4e5;background:#ffffff0e;border-radius:30px;padding:9px 14px;cursor:pointer}
+.journey__grid{display:grid;grid-template-columns:minmax(0, .92fr) minmax(0,1.08fr);align-items:start;gap:clamp(30px,6vw,95px);padding:90px 0 90px}
+.journey__overline{letter-spacing:.2em;color:var(--gold);font-size:10px;font-weight:700;text-transform:uppercase}
+.journey__title{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(55px,5.5vw,81px);line-height:.97;font-weight:500;letter-spacing:-.035em;max-width:500px;margin:22px 0}
+.journey__title em{display:block;color:var(--rose);font-weight:500}
+.journey__description{font-size:14px;line-height:1.85;color:#e0cde0;max-width:350px}
+.journey__celestial{position:relative;width:320px;height:265px;display:grid;place-items:center;margin:22px 0 5px}
+.journey__ring{position:absolute;width:275px;height:115px;border:1px solid #e8c88d89;border-radius:50%;transform:rotate(-27deg);animation:journey-ring 16s ease-in-out infinite alternate}
+.journey__ring--alt{border-color:#be91d09c;transform:rotate(42deg);animation:journey-ring-alt 22s ease-in-out infinite alternate}
+.journey__heart{font-family:Georgia,serif;font-size:94px;color:#e8a9c8;text-shadow:0 0 50px #d880c080;animation:journey-float 7s ease-in-out infinite}
+.journey__star{position:absolute;font-size:25px;color:#ecc98d;left:35px;top:47px}
+.journey__star--two{left:auto;right:44px;top:auto;bottom:49px;font-size:19px;color:#deb8dd}
+.journey__panel{border:1px solid #d6abd747;background:linear-gradient(148deg,#3d2654e8,#302040ef);padding:34px;border-radius:22px;box-shadow:0 25px 70px #0e091d65}
+.journey__counter{display:flex;gap:7px;margin-bottom:24px}
+.journey__counter b{height:3px;background:#745881;flex:1;border-radius:9px}
+.journey__counter b.is-complete{background:linear-gradient(90deg,#df93b9,#ebc68b)}
+.journey__field-label{display:block;color:#f7e7ee;font-size:13px;font-weight:600;margin-bottom:12px}
+.journey__question{margin:0 0 25px}
+.journey__options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.journey__options--topics{grid-template-columns:1fr}
+.journey__option{background:#ffffff08;border:1px solid #d9b3d033;text-align:left;color:#e5cfdf;min-height:77px;border-radius:11px;padding:15px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:transform .18s,border-color .2s,background .2s}
+.journey__option:hover{transform:translateY(-2px);border-color:#e9b2cb88;background:#ffffff10}
+.journey__option.is-selected{background:#edb3ce1c;border-color:#edb3ced1;box-shadow:inset 0 0 0 1px #edb3ce30}
+.journey__option-symbol{font-size:20px;line-height:1;color:#e5b5d0;min-width:22px;text-align:center}
+.journey__option-label{font-size:12px;line-height:1.5;font-weight:500}
+.journey__option-check{margin-left:auto;color:#f6d9b4;font-size:14px}
+.journey__button{border:0;background:var(--rose);color:#3f2039;min-height:55px;padding:14px 18px;border-radius:10px;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:space-between;gap:15px;width:100%;cursor:pointer;box-shadow:0 14px 30px #160a1d4f;transition:transform .2s,background .2s}
+.journey__button:hover:not(:disabled){background:#ffd2e2;transform:translateY(-2px)}
+.journey__button:disabled{opacity:.65;cursor:wait}
+.journey__note{font-size:11px;color:#c6afcc;line-height:1.7;margin:18px 0 0}
+.journey__error{border:1px solid #ff9ead70;border-radius:9px;color:#ffd0d6;background:#da4b6721;padding:13px;font-size:12px;line-height:1.6;margin:13px 0}
+.journey__footer{border-top:1px solid #ffffff16;text-align:center;padding:22px 15px 28px;font-size:10px;color:#b9a5c5;position:relative;z-index:1}
+.journey--hi{font-family:'Noto Sans Devanagari',Arial,sans-serif}
+.journey--hi .journey__title{font-family:'Noto Serif Devanagari',Georgia,serif;font-size:clamp(38px,4vw,58px);line-height:1.42}
+.journey__result{max-width:720px;margin:0 auto;padding:67px 0 90px}
+.journey__result-heading{text-align:center;max-width:580px;margin:0 auto 34px}
+.journey__result-heading .journey__title{margin:14px auto;font-size:clamp(47px,5.4vw,74px)}
+.journey__result-heading p{font-size:13px;color:#d9c0db;line-height:1.8}
+.journey__wheel{height:145px;width:145px;border-radius:50%;border:1px solid #e9bd8988;display:grid;place-items:center;margin:0 auto 25px;box-shadow:0 0 0 12px #ffffff04,0 0 0 35px #d8abce0d;position:relative}
+.journey__wheel:before{content:"";position:absolute;inset:-18px;border:1px dashed #d9b5d361;border-radius:50%;animation:journey-spin 28s linear infinite}
+.journey__wheel span{font-size:62px;color:#efc7da;animation:journey-float 8s ease-in-out infinite}
+.journey__reading{padding:32px;border-radius:19px;background:#fff1e7;color:#422a46;box-shadow:0 30px 65px #11071a66}
+.journey__reading-kicker{color:#95658f;letter-spacing:.16em;font-weight:700;font-size:10px}
+.journey__reading h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(37px,6vw,56px);font-weight:500;line-height:1.07;margin:19px 0 14px}
+.journey__reading p{font-size:14px;line-height:1.86;color:#735c73}
+.journey__evidence{border-top:1px solid #e0cddd;padding-top:17px;margin-top:20px;display:flex;gap:9px;flex-wrap:wrap;color:#82647f;font-size:12px}
+.journey__evidence strong{color:#59385d}
+.journey__premium{border:1px solid #d8b1da48;margin-top:20px;border-radius:17px;padding:27px;background:#362249a8}
+.journey__premium h3{font-family:'Cormorant Garamond',Georgia,serif;font-size:35px;font-weight:500;margin:0 0 10px}
+.journey__premium p{font-size:12px;line-height:1.8;color:#d6c0dc}
+.journey__premium ul{list-style:none;margin:18px 0 10px;padding:0;display:grid;gap:14px}
+.journey__premium li{display:flex;gap:12px;color:#f3e2ec;font-size:13px}
+.journey__premium li>span{color:#e4bd91}
+.journey__configured{color:#e9c891!important}
+.journey__loading{padding:45px 20px 15px;text-align:center}
+.journey__loading p{font-size:13px;color:#e1cfe0}
+.journey__action-row{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-top:21px;font-size:12px;color:#f0c8dd;text-decoration:underline;text-underline-offset:4px}
+.journey__provider{margin-top:25px;color:#c7aecf;font-size:10px;text-align:center}
+.journey__provider a{text-decoration:underline}
+@keyframes journey-spin{to{transform:rotate(360deg)}}
+@keyframes journey-float{50%{transform:translateY(-7px)}}
+@keyframes journey-ring{to{transform:rotate(-15deg)}}
+@keyframes journey-ring-alt{to{transform:rotate(30deg)}}
+@keyframes journey-breathe{to{opacity:.5;transform:scale(1.15)}}
+@media(max-width:780px){.journey__grid{grid-template-columns:1fr;gap:18px;padding:40px 0 70px}.journey__celestial{width:210px;height:160px;margin:8px 0}.journey__ring{width:200px;height:90px}.journey__heart{font-size:70px}.journey__star{left:8px;top:24px}.journey__star--two{right:15px;bottom:20px}.journey__title{font-size:clamp(52px,10vw,71px)}.journey__panel{max-width:560px}.journey__result{padding:54px 0}}
+@media(max-width:520px){.journey__wrap{width:calc(100% - 36px)}.journey__top{min-height:70px}.journey__brand{font-size:14px}.journey__back{font-size:0}.journey__back span{font-size:20px}.journey__language{padding:8px 11px}.journey__grid{padding-top:30px}.journey__celestial{display:none}.journey__title{margin:18px 0;font-size:clamp(49px,12vw,65px)}.journey__description{font-size:13px}.journey__panel{padding:22px 19px;border-radius:17px}.journey__options{gap:8px}.journey__option{min-height:75px;padding:12px 9px;gap:7px}.journey__option-label{font-size:11px}.journey__option-symbol{font-size:17px}.journey__result{padding:54px 0}.journey__reading{padding:25px 20px}.journey__premium{padding:23px 20px}.journey__result-heading .journey__title{font-size:51px}}
+@media(prefers-reduced-motion:reduce){.journey:after,.journey__ring,.journey__heart,.journey__wheel:before,.journey__wheel span{animation:none!important}.journey__button,.journey__option{transition:none}}

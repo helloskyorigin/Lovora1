@@ -1,0 +1,23 @@
+.recovery{min-height:100svh;background:radial-gradient(ellipse at 50% 30%,#492b59,#20112e 64%);color:#fff2e9;font-family:'DM Sans',Arial,sans-serif;position:relative;overflow:hidden}
+.recovery:before{content:"";position:absolute;inset:0;background-image:radial-gradient(#e8bfd5 .6px,transparent 1px);background-size:88px 88px;opacity:.15;pointer-events:none}
+.recovery-header{max-width:1100px;margin:auto;padding:28px 22px;border-bottom:1px solid #fff2;position:relative}
+.recovery-logo{letter-spacing:.22em;font-weight:700;font-size:18px}.recovery-logo span{color:#e8c58d;margin-right:10px}
+.recovery-center{position:relative;width:min(500px,calc(100% - 36px));margin:55px auto 100px;padding:35px 0 55px;text-align:center}
+.recovery-ornament{width:124px;height:124px;border:1px solid #eac89d6e;border-radius:50%;margin:0 auto 27px;display:grid;place-items:center;font-size:74px;color:#f0c0d6;animation:recovery-float 8s ease-in-out infinite}
+.recovery-eyebrow{color:#eacb95;letter-spacing:.19em;font-size:10px;font-weight:700}
+.recovery h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(53px,10vw,83px);font-weight:500;line-height:.98;margin:20px 0}
+.recovery-description{color:#ddc8e1;font-size:14px;line-height:1.9;max-width:425px;margin:0 auto 23px}
+.recovery-panel{padding:25px;border:1px solid #dfb7d844;background:linear-gradient(135deg,#4b2b59ad,#382044c9);border-radius:15px;text-align:left}
+.recovery-label{display:block;font-size:12px;margin-bottom:10px;color:#f9e1ed}
+.recovery-input{height:52px;border:1px solid #e2b5d464;border-radius:9px;background:#fff1;color:#fff;width:100%;padding:13px 15px;font-size:14px;outline:none}
+.recovery-input:focus{border-color:#f9cbe1;box-shadow:0 0 0 3px #ebbbd420}
+.recovery-button{background:#edb8d2;color:#342039;display:flex;align-items:center;justify-content:center;width:100%;min-height:51px;border:0;border-radius:9px;font-weight:700;cursor:pointer;font-size:13px;margin-top:16px;padding:12px}
+.recovery-button:hover:not(:disabled){background:#ffd7e4}
+.recovery-button:disabled{opacity:.7;cursor:wait}
+.recovery-message{color:#e8d5de;background:#5a3b60;border:1px solid #d4aec358;padding:14px;border-radius:10px;font-size:12px;line-height:1.8;margin-top:18px}
+.recovery-error{border-color:#ef9aa1;background:#743a53;color:#ffe3e5}
+.recovery-foot{font-size:11px;color:#bba6c7;margin-top:23px;line-height:1.7}
+.recovery-link{font-size:12px;color:#ebca92;display:inline-block;margin-top:20px;text-decoration:underline;text-underline-offset:3px}
+@keyframes recovery-float{50%{transform:translateY(-10px)}}
+@media(prefers-reduced-motion:reduce){.recovery-ornament{animation:none}}
+@media print{.recovery{display:none}}

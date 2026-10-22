@@ -1,0 +1,15 @@
+.lovora-return{background:radial-gradient(ellipse at 50% 35%,#49305b,#1b102d 68%);min-height:100svh;color:#fff0e8;position:relative;overflow:hidden;font-family:'DM Sans',Arial,sans-serif}
+.lovora-return::before{content:"";position:absolute;inset:0;background-image:radial-gradient(#e8c7df .7px,transparent 1px);background-size:90px 90px;opacity:.14;pointer-events:none}
+.lovora-return header{position:relative;z-index:1;border-bottom:1px solid #ffffff18;padding:27px max(22px,calc((100vw - 1100px)/2));}
+.lovora-return__brand{font-weight:600;font-size:18px;letter-spacing:.2em}.lovora-return__brand span{color:#ebc891}
+.lovora-return__center{position:relative;max-width:580px;margin:0 auto;text-align:center;padding:85px 20px 90px}
+.lovora-return__symbol{height:150px;width:150px;margin:0 auto 37px;border:1px solid #e3bb9b90;border-radius:50%;display:grid;place-items:center;font-size:100px;color:#f1bed6;box-shadow:0 0 0 25px #d9a1c70a;animation:lovora-return-float 8s ease-in-out infinite}
+.lovora-return__kicker{font-size:10px;font-weight:700;letter-spacing:.19em;color:#e8c58e}
+.lovora-return h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(56px,9vw,86px);line-height:.95;margin:19px 0 25px}
+.lovora-return__center>p:not(.lovora-return__kicker){color:#dcc6de;font-size:13px;line-height:1.85}
+.lovora-return__actions{display:flex;gap:13px;justify-content:center;align-items:center;flex-wrap:wrap;margin:29px 0}
+.lovora-return__actions button{background:#eab5d0;color:#36243c;border:0;border-radius:9px;padding:13px 20px;cursor:pointer;font-weight:700;font-size:12px}
+.lovora-return__actions a{color:#ead0dc;border-bottom:1px solid #e9c8d790;padding:12px 3px;font-size:12px}
+.lovora-return__footnote{color:#bba7c9!important;font-size:11px!important}
+@keyframes lovora-return-float{50%{transform:translateY(-9px)}}
+@media(prefers-reduced-motion:reduce){.lovora-return__symbol{animation:none}}

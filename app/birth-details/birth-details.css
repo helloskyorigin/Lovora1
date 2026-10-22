@@ -1,0 +1,75 @@
+/* LOVORA / The Birth Moment — intentionally scoped to avoid touching the landing page. */
+.birth-page{--b-night:#1b102c;--b-plum:#2e1a43;--b-cream:#fff0e8;--b-rose:#edb4d0;--b-gold:#eac78e;min-height:100svh;background:radial-gradient(ellipse at 12% 34%,#39204f 0%,transparent 42%),radial-gradient(ellipse at 88% 65%,#3d224a 0%,transparent 43%),#1b102c;color:var(--b-cream);position:relative;overflow:hidden;font-family:'DM Sans',Arial,sans-serif}
+.birth-page::before{content:"";position:absolute;inset:0;background:radial-gradient(#d8b8c9 .6px,transparent 1px);background-size:73px 73px;opacity:.13;pointer-events:none}
+.birth-page *{box-sizing:border-box}
+.birth-page__glow{position:absolute;width:410px;height:410px;filter:blur(95px);border-radius:50%;opacity:.20;pointer-events:none;animation:birth-glow 14s ease-in-out infinite alternate}
+.birth-page__glow--left{background:#b978b9;top:-130px;left:-160px}
+.birth-page__glow--right{background:#ac648b;right:-180px;bottom:-160px;animation-delay:-5s}
+.birth-header{width:min(1140px,calc(100% - 72px));margin:auto;display:flex;align-items:center;justify-content:space-between;height:96px;gap:18px;position:relative;z-index:5;border-bottom:1px solid #ffffff18}
+.birth-back{color:#d9c2dc;font-size:12px;display:flex;align-items:center;gap:12px;transition:color .2s}
+.birth-back span{font-size:19px}
+.birth-back:hover{color:#fff}
+.birth-logo{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:11px;letter-spacing:.23em;font-size:17px;font-weight:600;color:#fbe8ed}
+.birth-logo__spark{font-size:22px;color:#e8c488;letter-spacing:0}
+.birth-language{background:#ffffff12;border:1px solid #ffffff30;border-radius:50px;color:#f0d6e8;padding:11px 17px;font-size:12px;cursor:pointer}
+.birth-language:hover{background:#ffffff20}
+.birth-layout{width:min(1140px,calc(100% - 72px));margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,490px);gap:clamp(30px,6vw,100px);align-items:center;padding:54px 0 82px}
+.birth-story{position:relative;max-width:540px;align-self:center}
+.birth-story__step,.birth-form-heading{font-size:10px;font-weight:700;letter-spacing:.2em;color:#eac78e;text-transform:uppercase}
+.birth-story__art{position:relative;width:100%;max-width:430px;height:325px;margin:8px 0 3px;display:grid;place-items:center}
+.birth-story__orbit{position:absolute;width:78%;height:39%;border:1px solid #dab68f8c;border-radius:50%;transform:rotate(-27deg);animation:birth-orbit-one 22s ease-in-out infinite alternate}
+.birth-story__orbit--two{border-color:#b89bce80;transform:rotate(48deg);animation:birth-orbit-two 24s ease-in-out infinite alternate}
+.birth-story__moon{font-family:Georgia,serif;font-size:230px;line-height:1;color:#f3d2d9;text-shadow:0 0 65px #c879c577;transform:translateY(-12px);animation:birth-float 9s ease-in-out infinite}
+.birth-story__star{position:absolute;color:#f7dcae;animation:birth-twinkle 5s ease-in-out infinite}
+.birth-story__star--one{left:11%;top:23%;font-size:31px}
+.birth-story__star--two{right:10%;bottom:17%;font-size:20px;animation-delay:-2s}
+.birth-story h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(52px,5.2vw,78px);line-height:.96;letter-spacing:-.035em;margin:10px 0 24px;max-width:540px}
+.birth-story h1 em{display:block;color:var(--b-rose);font-weight:500}
+.birth-story>p{color:#d7c1df;max-width:365px;font-size:14px;line-height:1.8}
+.birth-story__line{height:1px;width:180px;background:linear-gradient(90deg,#c49ca8,transparent);margin-top:36px}
+.birth-form-shell{border:1px solid #d5afd139;background:linear-gradient(144deg,#3a2451de,#2b1b3fdc);border-radius:22px;box-shadow:0 26px 80px #0e081d59;padding:35px 38px;backdrop-filter:blur(14px)}
+.birth-progress{display:flex;gap:8px;margin-bottom:24px}
+.birth-progress span{height:3px;background:#816484;width:50%;border-radius:10px}
+.birth-progress .birth-progress__active{background:linear-gradient(90deg,#e5b5cc,#e7c88d)}
+.birth-form-heading{margin-bottom:31px}
+.birth-form{display:grid;gap:21px}
+.birth-field{position:relative;min-width:0}
+.birth-field>label:not(.birth-checkbox){display:block;font-size:12px;font-weight:600;color:#f3dfec;margin-bottom:10px}
+.birth-field input:not([type="checkbox"]){border:1px solid #d6afcf47;border-radius:10px;background:#ffffff0b;color:#fff3ee;min-width:0;max-width:100%;width:100%;height:54px;padding:0 16px;font-family:inherit;font-size:14px;outline:none;transition:border-color .2s,background .2s,box-shadow .2s}
+.birth-field input::placeholder{color:#bca5c9}
+.birth-field input:not([type="checkbox"]):focus{border-color:#e6bbd4;box-shadow:0 0 0 3px #dfa9ce26;background:#ffffff12}
+.birth-field input[type="date"],.birth-field input[type="time"]{color-scheme:dark}
+.birth-field input:disabled{opacity:.45;cursor:not-allowed}
+.birth-checkbox{display:flex;gap:10px;align-items:center;margin-top:12px;font-size:12px;color:#d2b9d5;cursor:pointer}
+.birth-checkbox input{accent-color:#f1b7d2;width:17px;height:17px}
+.birth-warning{font-size:12px;line-height:1.65;background:#e9c78c18;border:1px solid #ebc78e54;border-radius:9px;padding:12px;color:#edd7be;margin-top:11px}
+.birth-city-wrap{position:relative}
+.birth-city-icon{position:absolute;top:17px;left:16px;color:#e9bdd7;font-size:23px;z-index:1;line-height:1}
+.birth-city-wrap input{padding-left:44px!important;padding-right:33px!important}
+.birth-city-verified{position:absolute;right:16px;top:16px;color:#ccf0d6;font-size:18px}
+.birth-city-options{position:absolute;top:calc(100% + 5px);left:0;right:0;max-height:220px;overflow-y:auto;background:#352045;border:1px solid #d3a9c77d;border-radius:10px;z-index:20;box-shadow:0 19px 35px #11071a91}
+.birth-city-options button{width:100%;padding:14px 15px;color:#f2e2ed;text-align:left;background:transparent;border:0;border-bottom:1px solid #ffffff15;font-size:12px;cursor:pointer}
+.birth-city-options button:hover,.birth-city-options button:focus{background:#674571;outline:none}
+.birth-hint{font-size:10px;line-height:1.5;color:#b9a5c5;margin:7px 0 0}
+.birth-hint a{color:#ecc697;text-decoration:underline;text-underline-offset:2px}
+.birth-field-error{font-size:12px;color:#ffbecc;margin:7px 0 0}
+.birth-error{background:#e3577023;border:1px solid #ff8f9e76;padding:12px 14px;border-radius:9px;color:#ffced5;font-size:12px;line-height:1.6}
+.birth-submit{width:100%;height:56px;padding:0 20px;border:0;border-radius:10px;background:#edb4d0;box-shadow:0 11px 28px #12082245;color:#3a2035;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-weight:700;font-size:13px;transition:background .2s,transform .2s}
+.birth-submit span{font-size:19px;font-weight:400}
+.birth-submit:hover:not(:disabled){background:#ffd0e1;transform:translateY(-2px)}
+.birth-submit:disabled{opacity:.65;cursor:wait}
+.birth-safe{display:flex;align-items:flex-start;gap:10px;color:#bba6c6}
+.birth-safe>span{color:#e5c28d}
+.birth-safe p{font-size:10px;line-height:1.7;margin:0}
+.birth-safe strong{display:block;font-weight:500;color:#dfc8db}
+.birth-footer{position:relative;z-index:1;padding:24px;text-align:center;color:#a891b6;font-size:10px}
+.birth-page--hi{font-family:'Noto Sans Devanagari',Arial,sans-serif}
+.birth-page--hi h1{font-family:'Noto Serif Devanagari',Georgia,serif;font-size:clamp(38px,3.8vw,59px);line-height:1.4}
+@keyframes birth-float{0%,100%{transform:translateY(-12px)}50%{transform:translateY(-23px)}}
+@keyframes birth-glow{from{opacity:.13;transform:scale(.92)}to{opacity:.25;transform:scale(1.1)}}
+@keyframes birth-orbit-one{from{transform:rotate(-27deg)}to{transform:rotate(-13deg)}}
+@keyframes birth-orbit-two{from{transform:rotate(48deg)}to{transform:rotate(34deg)}}
+@keyframes birth-twinkle{0%,100%{opacity:.3}50%{opacity:1}}
+@media(max-width:900px){.birth-header,.birth-layout{width:calc(100% - 48px)}.birth-layout{grid-template-columns:1fr;gap:27px;padding:32px 0 56px}.birth-story{max-width:none}.birth-story__art{display:none}.birth-story h1{font-size:clamp(50px,9vw,72px);margin:17px 0}.birth-story__line{display:none}.birth-form-shell{max-width:650px;width:100%;justify-self:center}}
+@media(max-width:560px){.birth-header,.birth-layout{width:calc(100% - 36px)}.birth-header{height:72px}.birth-back{font-size:0}.birth-back span{font-size:22px}.birth-logo{font-size:15px}.birth-language{padding:9px 11px;font-size:11px}.birth-layout{padding:32px 0 35px;gap:22px}.birth-story h1{font-size:clamp(48px,11.4vw,65px)}.birth-page--hi h1{font-size:38px}.birth-story p{font-size:13px}.birth-form-shell{padding:27px 20px;border-radius:17px}.birth-form{gap:20px}.birth-form-heading{font-size:9px;margin-bottom:25px}.birth-story__step{font-size:9px}.birth-footer{padding:16px 22px 27px}}
+@media(prefers-reduced-motion:reduce){.birth-page__glow,.birth-story__orbit,.birth-story__moon,.birth-story__star{animation:none!important}.birth-submit{transition:none}}
