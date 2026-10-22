@@ -4,7 +4,7 @@ import {assertProduct,validPayment,type DodoPayment} from "../lib/payments/valid
 
 const productId="pdt_DEMO123";
 const configured={product_id:productId,is_recurring:false,price:{type:"one_time_price",currency:"INR",price:14900,tax_inclusive:true}};
-const order={id:"00000000-0000-0000-0000-000000000123",email:"buyer@example.com",sessionId:"cks_DEMO",paymentId:""};
+const order={id:"00000000-0000-0000-0000-000000000123",email:"buyer@example.com",sessionId:"cks_DEMO",paymentId:"",pricePaise:14900};
 const settled:DodoPayment={payment_id:"pay_DEMO",checkout_session_id:order.sessionId,status:"succeeded",currency:"INR",total_amount:14900,
  metadata:{lovora_order_id:order.id},product_cart:[{product_id:productId,quantity:1}],customer:{email:order.email}};
 test("merchant product has the expected one-time INR 149 price",()=>{
@@ -39,4 +39,11 @@ test("refuses to accept nonmatching payment data",()=>{
 });
 test("payment identity is unique per purchase",()=>{
  assert.equal(validPayment(settled,{...order,paymentId:"pay_OTHER"},productId),false);
+});
+
+test("previous INR 299 orders keep their original verified price requirement",()=>{
+ const legacy={...order,pricePaise:29900};
+ const oldPayment={...settled,total_amount:29900};
+ assert.equal(validPayment(oldPayment,legacy,productId),true);
+ assert.equal(validPayment(settled,legacy,productId),false);
 });
