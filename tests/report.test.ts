@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createMarriageReport, normalizePlanets } from "../lib/report/rules";
+import {localizeReport} from "../lib/report/localize";
 import type { JourneyDraft } from "../lib/context";
 import type { RawChartData } from "../lib/report/types";
 
@@ -87,4 +88,37 @@ test("does not silently trust a known ID with an unknown planet name",()=>{
  const rows=source().planets.map(x=>({...x}));
  rows[4]={...rows[4],name:"Unknown planet"};
  assert.throws(()=>normalizePlanets(rows),/INCOMPLETE_CHART/);
+});
+
+test("all seven paid chapters contain substantial report content and first five have fifteen chart-backed deep dives",()=>{
+ const report=createMarriageReport(birth,source(),"audit-seven-chapters");
+ assert.equal(report.chapters.length,7);
+ assert.ok(report.chapters.every(ch=>ch.paragraphs.length>=2&&ch.introduction.length>15));
+ const deep=report.chapters.flatMap(ch=>ch.deepDive||[]);
+ assert.equal(deep.length,15);
+ assert.deepEqual(report.chapters.map(ch=>ch.deepDive?.length||0),[3,3,3,3,3,0,0]);
+ for(const d of deep){
+  assert.ok(d.title.length>4&&d.observation.length>12&&d.meaning.length>25&&d.reflection.length>12);
+  assert.ok(d.evidenceIds.every(id=>report.evidence.some(e=>e.id===id)));
+ }
+ assert.ok(report.chapters.find(ch=>ch.id==="evidence")?.evidenceIds.length);
+ assert.ok(report.chapters.find(ch=>ch.id==="keepsake")?.paragraphs.length);
+});
+
+test("report interpretation changes with verified planetary positions and selected personal context",()=>{
+ const a=createMarriageReport(birth,source(),"audit-a");
+ const b=createMarriageReport({...birth,relationship:{status:"engaged",interest:"timing"}},source("Taurus"),"audit-b");
+ assert.notEqual(a.marriagePath.headline,b.marriagePath.headline);
+ assert.notEqual(a.chapters[0].deepDive?.[0].observation,b.chapters[0].deepDive?.[0].observation);
+ assert.notEqual(a.chapters[0].deepDive?.[2].meaning,b.chapters[0].deepDive?.[2].meaning);
+});
+
+test("Hindi mode keeps seven full chapters and translated personal deep dives",()=>{
+ const english=createMarriageReport(birth,source(),"audit-hindi");
+ const hindi=localizeReport(english,"hi");
+ assert.equal(hindi.chapters.length,7);
+ assert.equal(hindi.chapters.reduce((n,ch)=>n+(ch.deepDive?.length||0),0),15);
+ assert.notEqual(hindi.chapters[0].title,english.chapters[0].title);
+ assert.notEqual(hindi.chapters[0].deepDive?.[0].title,english.chapters[0].deepDive?.[0].title);
+ assert.ok(hindi.chapters.every(ch=>ch.paragraphs.length>=2));
 });
