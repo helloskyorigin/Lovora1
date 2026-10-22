@@ -11,6 +11,7 @@ import "../journey.css";
 
 type Insight={
  planet:"Venus";sign:string;descriptionEn:string;descriptionHi:string;
+ source?:"Prokerala planet-position"|"Local astronomy calculation";
  marriagePath?:{leaning:"romance-linked"|"undetermined";loveIndicators:number;available:true};
 };
 type View={ok?:boolean;mode?:"verified"|"guide";insight?:Insight;sessionToken?:string;reason?:string;error?:string};

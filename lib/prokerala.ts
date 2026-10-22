@@ -115,6 +115,7 @@ export async function calculateFreeInsight(draft: JourneyDraft, cacheKey: string
 // Optional endpoints can fail independently; missing data is explicitly disclosed.
 export async function fetchPaidChartData(draft: JourneyDraft): Promise<import("./report/types").RawChartData> {
   if (!draft.timeKnown || !draft.birthTime) throw new Error("BIRTH_TIME_REQUIRED");
+  if(draft.preview?.source==="Local astronomy calculation")return calculateLocalChart(draft);
   let token:string,original:PlanetPayload;
   try{
     token=await accessToken();

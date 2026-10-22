@@ -69,10 +69,13 @@ const [unavailablePreview,guideWhenNoRedis]=await jsonResponse("/api/insight",{
   "x-lovora-birth-session":timedBody.sessionToken}
 });
 assert.equal(unavailablePreview.status,200,JSON.stringify(guideWhenNoRedis));
-assert.equal(guideWhenNoRedis.mode,"guide",
- "If chart budget/provider is unavailable, show an honest guide rather than an error screen");
-assert.equal("insight" in guideWhenNoRedis,false,"Never invent a birth chart while offline");
-console.log("Prokerala/Redis offline still returns usable Love vs Arranged guide, not 503.");
+assert.equal(guideWhenNoRedis.mode,"verified",
+ "Offline astronomy fallback must calculate a real chart when provider/Redis are unavailable");
+assert.equal(guideWhenNoRedis.insight?.source,"Local astronomy calculation");
+assert.equal(guideWhenNoRedis.insight?.marriagePath?.available,true);
+assert.equal(typeof guideWhenNoRedis.insight?.sign,"string");
+assert.ok(typeof guideWhenNoRedis.sessionToken==="string");
+console.log("Offline astronomy creates a calculated marriage indicator when Prokerala/Redis are missing.");
 
 const [reportWithoutPayment,reportBody]=await jsonResponse("/api/report");
 assert.equal(reportWithoutPayment.status,403,JSON.stringify(reportBody));
