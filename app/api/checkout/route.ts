@@ -1,6 +1,7 @@
 import {createHash,randomUUID} from "node:crypto";
+import {isSameOriginRequest} from "@/lib/request-origin";
 import {NextRequest,NextResponse} from "next/server";
-import {BIRTH_COOKIE,readBirthDraft} from "@/lib/birth-session";
+import {readBirthDraftFromRequest} from "@/lib/birth-session";
 import type {JourneyDraft} from "@/lib/context";
 import { isMinorBirthDate } from "@/lib/birth";
 import {dodoGet,dodoPost,assertProduct,getDodoProductId,verifiedCheckoutURL,PRICE_PAISE,type DodoProduct} from "@/lib/payments/dodo";
@@ -28,10 +29,9 @@ function publicOrigin(request:NextRequest){
 export async function POST(request:NextRequest){
  if(!process.env.LOVORA_SUPPORT_EMAIL||!process.env.LOVORA_OPERATOR_NAME)return NextResponse.json({ok:false,error:"Payment support and legal operator details are required before charging."},{status:503,headers});
  if(process.env.LOVORA_PAYMENTS_ENABLED!=="true")return NextResponse.json({ok:false,error:"Payments are not enabled yet. Merchant approval is required."},{status:503,headers});
- const origin=request.headers.get("origin");
- if(origin&&origin!==new URL(request.url).origin)return NextResponse.json({ok:false,error:"Invalid request origin."},{status:403,headers});
+ if(!isSameOriginRequest(request))return NextResponse.json({ok:false,error:"Invalid request origin."},{status:403,headers});
  if(!request.headers.get("content-type")?.includes("application/json"))return NextResponse.json({ok:false,error:"Expected JSON."},{status:415,headers});
- const draft=readBirthDraft(request.cookies.get(BIRTH_COOKIE)?.value) as JourneyDraft|null;
+ const draft=readBirthDraftFromRequest(request) as JourneyDraft|null;
  if(!draft?.relationship||!draft.preview||!draft.birthTime||!draft.timeKnown)
   return NextResponse.json({ok:false,error:"Complete your free insight before checkout."},{status:401,headers});
  let raw:unknown;

@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import "./birth-details.css";
 import { isMinorBirthDate } from "@/lib/birth";
 import { readApiJSON } from "@/lib/api-response";
+import { rememberBirthSession,forgetBirthSession } from "@/lib/client-birth-session";
 
 type City = { id: number; name: string; region: string; country: string; display: string };
 type Lang = "en" | "hi";
@@ -129,9 +130,11 @@ function BirthDetailsForm() {
         credentials: "same-origin",
         body: JSON.stringify({ firstName, dateOfBirth, timeKnown, birthTime: timeKnown ? birthTime : null, placeId: selectedCity.id, guardianConsent: isMinor && guardianConsent }),
       });
-      const json = await readApiJSON<{ ok?: boolean; error?: string; next?: string }>(res, c.saveApiError);
+      const json = await readApiJSON<{ ok?: boolean; error?: string; next?: string; sessionToken?:string }>(res, c.saveApiError);
       if (!res.ok || !json.ok) throw new Error(json.error || c.failed);
-      router.push((json.next || "/birth-details/saved") + "?lang=" + language);
+      forgetBirthSession();
+      rememberBirthSession(json.sessionToken);
+      router.push((json.next || "/insight") + "?lang=" + language);
     } catch (e) {
       setError(e instanceof Error ? e.message : c.failed);
     } finally {

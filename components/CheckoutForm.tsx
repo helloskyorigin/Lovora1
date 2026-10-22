@@ -2,6 +2,7 @@
 import {FormEvent,useState} from "react";
 import "./checkout.css";
 import {useLaunchOffer} from "./LaunchOffer";
+import {getBirthSessionHeaders} from "@/lib/client-birth-session";
 export function CheckoutForm({lang}:{lang:"en"|"hi"}){
  const [email,setEmail]=useState("");
  const [ack,setAck]=useState(false);
@@ -15,7 +16,7 @@ export function CheckoutForm({lang}:{lang:"en"|"hi"}){
   e.preventDefault();if(!ack||busy||checkoutPaused)return;
   setBusy(true);setError("");
   try{
-   const res=await fetch("/api/checkout",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,adultPayerConfirmed:ack})});
+   const res=await fetch("/api/checkout",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json",...getBirthSessionHeaders()},body:JSON.stringify({email,adultPayerConfirmed:ack})});
    const data=await res.json() as {ok?:boolean;checkoutUrl?:string;error?:string};
    if(!res.ok||!data.ok||!data.checkoutUrl)throw new Error(data.error||"Checkout unavailable.");
    window.location.assign(data.checkoutUrl);

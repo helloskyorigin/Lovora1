@@ -2,7 +2,7 @@ import { isSameOriginRequest } from "@/lib/request-origin";
 import { NextRequest, NextResponse } from "next/server";
 import { validateBirthInput } from "@/lib/birth";
 import { getVerifiedPlace } from "@/lib/city-directory";
-import { BIRTH_COOKIE, BIRTH_TTL_SECONDS, readBirthDraft, sealBirthDraft } from "@/lib/birth-session";
+import { BIRTH_COOKIE, BIRTH_TTL_SECONDS, readBirthDraftFromRequest, sealBirthDraft } from "@/lib/birth-session";
 import type { BirthDraft } from "@/lib/birth";
 
 export const runtime = "nodejs";
@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 const headers = { "Cache-Control": "no-store" };
 
 export async function GET(request: NextRequest) {
-  const draft = readBirthDraft(request.cookies.get(BIRTH_COOKIE)?.value);
+  const draft = readBirthDraftFromRequest(request);
   if (!draft) return NextResponse.json({ ok: false, error: "No saved birth details found." }, { status: 404, headers });
   return NextResponse.json({ ok: true, draft }, { headers });
 }
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
       savedAt: Date.now(),
     };
     const token = sealBirthDraft(draft);
-    const response = NextResponse.json({ ok: true, next: "/relationship" }, { headers });
+    const response = NextResponse.json({ ok: true, next: "/insight", sessionToken: token }, { headers });
     response.cookies.set(BIRTH_COOKIE, token, {
       httpOnly: true, secure: process.env.NODE_ENV === "production",
       sameSite: "lax", path: "/", maxAge: BIRTH_TTL_SECONDS,

@@ -1,7 +1,7 @@
 import { isSameOriginRequest } from "@/lib/request-origin";
 import { createHash } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
-import { BIRTH_COOKIE, BIRTH_TTL_SECONDS, readBirthDraft, sealBirthDraft } from "@/lib/birth-session";
+import { BIRTH_COOKIE, BIRTH_TTL_SECONDS, readBirthDraftFromRequest, sealBirthDraft } from "@/lib/birth-session";
 import { calculateFreeInsight } from "@/lib/prokerala";
 import { allowPublicCost } from "@/lib/traffic-guard";
 import type { JourneyDraft } from "@/lib/context";
@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
   if (!isSameOriginRequest(request)) {
     return NextResponse.json({ ok: false, error: "Invalid request origin." }, { status: 403, headers });
   }
-  const draft = readBirthDraft(request.cookies.get(BIRTH_COOKIE)?.value) as JourneyDraft | null;
+  const draft = readBirthDraftFromRequest(request) as JourneyDraft | null;
   if (!draft?.relationship) return NextResponse.json({ ok: false, code: "MISSING_CONTEXT", error: "Complete your birth details and relationship questions first." }, { status: 401, headers });
   if (!draft.birthTime || !draft.timeKnown) return NextResponse.json({
     ok: false, code: "TIME_REQUIRED",

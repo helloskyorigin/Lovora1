@@ -1,16 +1,36 @@
 import "server-only";
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from "node:crypto";
+import { closeSync, mkdirSync, openSync, readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import type { NextRequest } from "next/server";
 import type { BirthDraft } from "./birth";
 
 export const BIRTH_COOKIE = "lovora_birth_draft";
 export const BIRTH_TTL_SECONDS = 60 * 60 * 24;
 
-// Development preview only. Rotates on restart; production requires a persistent secret.
-const previewOnlyKey = randomBytes(32);
+// A local-preview AES key survives Next hot reloads. NEVER a production fallback.
+let localKey:Buffer|null=null;
+function developmentKey():Buffer {
+  if(localKey)return localKey;
+  const folder=join(process.cwd(),".lovora-preview");
+  const path=join(folder,"session.key");
+  mkdirSync(folder,{recursive:true,mode:0o700});
+  try{
+    const fd=openSync(path,"wx",0o600);
+    try{writeFileSync(fd,randomBytes(32).toString("hex"));}
+    finally{closeSync(fd);}
+  }catch(error){
+    if((error as NodeJS.ErrnoException).code!=="EEXIST")throw error;
+  }
+  const hex=readFileSync(path,"utf8").trim();
+  if(!/^[a-f0-9]{64}$/i.test(hex))throw new Error("DEV_SESSION_KEY_INVALID");
+  localKey=Buffer.from(hex,"hex");
+  return localKey;
+}
 
 function key(): Buffer {
   const secret = process.env.BIRTH_SESSION_SECRET;
-  if (!secret && process.env.NODE_ENV !== "production") return previewOnlyKey;
+  if (!secret && process.env.NODE_ENV !== "production") return developmentKey();
   if (!secret || secret.length < 32) {
     throw new Error("BIRTH_SESSION_SECRET must be configured with at least 32 characters.");
   }
@@ -40,4 +60,13 @@ export function readBirthDraft(token: string | undefined): BirthDraft | null {
   } catch {
     return null;
   }
+}
+
+/** Embedded browser previews may block cookies. The alternate token stays AES-GCM
+ * encrypted and authenticated, and is accepted only for same-origin requests. */
+export function readBirthDraftFromRequest(request:NextRequest):BirthDraft|null{
+  const cookieDraft=readBirthDraft(request.cookies.get(BIRTH_COOKIE)?.value);
+  if(request.headers.get("sec-fetch-site")==="cross-site")return cookieDraft;
+  const token=request.headers.get("x-lovora-birth-session")||undefined;
+  return readBirthDraft(token)||cookieDraft;
 }

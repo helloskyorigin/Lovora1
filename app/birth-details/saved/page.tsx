@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import "../birth-details.css";
+import {getBirthSessionHeaders} from "@/lib/client-birth-session";
 
 type Saved = { ok: boolean; draft?: { firstName: string; dateOfBirth: string; birthTime: string | null; timeKnown: boolean; place: { name: string; region: string; country: string; timezone: string }; savedAt: number } };
 
@@ -12,7 +13,7 @@ function SavedBirthContent() {
   const [data, setData] = useState<Saved | null>(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    fetch("/api/birth-details", { cache: "no-store" })
+    fetch("/api/birth-details", { cache: "no-store",credentials:"same-origin",headers:getBirthSessionHeaders() })
       .then(async res => res.ok ? (await res.json() as Saved) : { ok: false })
       .then(setData)
       .catch(() => setData({ ok: false }))
@@ -46,9 +47,9 @@ function SavedBirthContent() {
                 <p style={{ color: "#e9bf95", fontSize: 13, lineHeight: 1.7 }}>
                   {lang === "hi"
                     ? "जन्म विवरण सुरक्षित हैं। अब रिश्तों के बारे में दो सवाल चुनें और फिर कुंडली के वास्तविक ग्रह-आधारित संकेत देखें। अभी कोई ज्योतिषीय परिणाम नहीं बनाया गया है।"
-                    : "Birth details are securely saved. Continue to the relationship questions, then calculate a real chart-based free insight. No astrology result has been generated yet."}
+                    : "Birth details are securely saved. Continue straight to your Love vs Arranged Marriage exploration. No astrology result has been generated yet."}
                 </p>
-                <Link className="birth-submit" href={"/relationship?lang=" + lang} style={{ marginTop: 25 }}>
+                <Link className="birth-submit" href={"/insight?lang=" + lang} style={{ marginTop: 25 }}>
                   {lang === "hi" ? "अपने रिश्ते के बारे में बताएँ" : "Continue to relationship questions"} <span>↗</span>
                 </Link>
               </div> :

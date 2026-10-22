@@ -5,3 +5,6 @@ out
 !.env.example
 *.tsbuildinfo
 .DS_Store
+
+# Private, local development-only session encryption key
+.lovora-preview/
