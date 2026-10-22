@@ -73,3 +73,19 @@ assert.equal(guideWhenNoRedis.mode,"guide",
  "If chart budget/provider is unavailable, show an honest guide rather than an error screen");
 assert.equal("insight" in guideWhenNoRedis,false,"Never invent a birth chart while offline");
 console.log("Prokerala/Redis offline still returns usable Love vs Arranged guide, not 503.");
+
+const [reportWithoutPayment,reportBody]=await jsonResponse("/api/report");
+assert.equal(reportWithoutPayment.status,403,JSON.stringify(reportBody));
+assert.equal(reportBody.ok,false,"Full paid report must never be available before verified payment");
+const [checkoutWithoutSession,checkoutBody]=await jsonResponse("/api/checkout/status",{
+ method:"POST",headers:{"content-type":"application/json","origin":base},
+ body:JSON.stringify({orderId:"00000000-0000-4000-8000-000000000000"})
+});
+assert.equal(checkoutWithoutSession.status,401,JSON.stringify(checkoutBody));
+const scanningScreen=await fetch(base+"/scanning?lang=en");
+assert.equal(scanningScreen.status,200,"Scanning page must load");
+assert.match(scanningScreen.headers.get("content-type")||"",/text\/html/);
+const choiceScreen=await fetch(base+"/insight?lang=en&choice=1");
+assert.equal(choiceScreen.status,200,"Free-vs-paid choice route must load");
+assert.match(choiceScreen.headers.get("content-type")||"",/text\/html/);
+console.log("Free/paid choice routes exist; unpaid report access and checkout status are denied.");
