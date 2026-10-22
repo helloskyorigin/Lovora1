@@ -3,7 +3,9 @@ import {NextRequest,NextResponse} from "next/server";
 import {BIRTH_COOKIE,readBirthDraft} from "@/lib/birth-session";
 import type {JourneyDraft} from "@/lib/context";
 import { isMinorBirthDate } from "@/lib/birth";
-import {dodoGet,dodoPost,assertProduct,getDodoProductId,verifiedCheckoutURL,type DodoProduct} from "@/lib/payments/dodo";
+import {dodoGet,dodoPost,assertProduct,getDodoProductId,verifiedCheckoutURL,PRICE_PAISE,type DodoProduct} from "@/lib/payments/dodo";
+import {getLaunchOfferClaimed} from "@/lib/payments/offer-store";
+import {LAUNCH_LIMIT} from "@/lib/payments/offer-store-key";
 import {createOrder,encodeDraft,limitAttempts,patchOrder} from "@/lib/payments/order-store";
 import {CHECKOUT_COOKIE,issueCheckoutOrder} from "@/lib/payments/checkout-cookie";
 
@@ -47,11 +49,14 @@ export async function POST(request:NextRequest){
   const hash=createHash("sha256").update(ip).digest("hex").slice(0,30);
   if(!await limitAttempts("checkout:"+hash,6,3600))
    return NextResponse.json({ok:false,error:"Too many checkout attempts. Try later."},{status:429,headers});
+  if(await getLaunchOfferClaimed()>=LAUNCH_LIMIT)
+   return NextResponse.json({ok:false,error:"The first 500 launch offers have been claimed."},{status:409,headers});
   const productId=getDodoProductId();
   assertProduct(await dodoGet<DodoProduct>("/products/"+encodeURIComponent(productId)),productId);
   const orderId=randomUUID();
   await createOrder({id:orderId,email,sessionId:"",paymentId:"",status:"pending",reportId:"",
-    encryptedDraft:encodeDraft(draft),createdAt:new Date().toISOString()});
+    encryptedDraft:encodeDraft(draft),createdAt:new Date().toISOString(),
+    pricePaise:PRICE_PAISE,productId});
   const session=await dodoPost<{session_id?:string;checkout_url?:string|null}>("/checkouts",{
     product_cart:[{product_id:productId,quantity:1}],
     customer:{email,name:draft.firstName||undefined},
@@ -72,7 +77,7 @@ export async function POST(request:NextRequest){
   const code=error instanceof Error?error.message:"UNKNOWN";
   console.error("LOVORA checkout setup failed:",code);
   const message=code==="DODO_PRODUCT_PRICE_MISMATCH"
-   ?"Merchant product must be configured as an exact ₹299 INR one-time purchase."
+   ?"Merchant product must be configured as an exact ₹149 INR one-time launch purchase."
    :"Secure checkout is temporarily unavailable. Please retry after configuration.";
   return NextResponse.json({ok:false,error:message},{status:503,headers});
  }

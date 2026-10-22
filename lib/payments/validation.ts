@@ -1,4 +1,5 @@
-export const PRICE_PAISE = 29900;
+export const PRICE_PAISE = 14900;
+export const ORIGINAL_PRICE_PAISE = 29900;
 export const CURRENCY = "INR";
 export type DodoPayment = {
  payment_id?: string; checkout_session_id?: string; status?: string; currency?: string;
@@ -14,8 +15,8 @@ export function assertProduct(product:DodoProduct,id:string):void {
   throw new Error("DODO_PRODUCT_PRICE_MISMATCH");
  }
 }
-export function validPayment(payment:DodoPayment, order:{id:string;sessionId:string;email:string;paymentId?:string},product:string):boolean {
- return payment.status==="succeeded" && payment.currency===CURRENCY && payment.total_amount===PRICE_PAISE &&
+export function validPayment(payment:DodoPayment, order:{id:string;sessionId:string;email:string;paymentId?:string;pricePaise?:number},product:string):boolean {
+ return payment.status==="succeeded" && payment.currency===CURRENCY && payment.total_amount===(order.pricePaise??ORIGINAL_PRICE_PAISE) &&
  payment.metadata?.lovora_order_id===order.id && payment.checkout_session_id===order.sessionId &&
  Array.isArray(payment.product_cart) && payment.product_cart.length===1 &&
  payment.product_cart[0].product_id===product && payment.product_cart[0].quantity===1 &&

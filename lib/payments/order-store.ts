@@ -1,12 +1,15 @@
 import "server-only";
 import {createCipheriv,createDecipheriv,createHash,randomBytes} from "node:crypto";
 import type {JourneyDraft} from "../context";
+import {PRICE_PAISE,ORIGINAL_PRICE_PAISE} from "./validation";
+import {LAUNCH_REDEEMED_KEY} from "./offer-store-key";
 
 export type OrderStatus="pending"|"paid"|"ready"|"failed"|"revoked";
 export type PaidOrder={
  id:string;email:string;sessionId:string;paymentId:string;
  status:OrderStatus;reportId:string;encryptedDraft:string;createdAt:string;
  generationAttempts?:number;lastAttemptAt?:number;
+ pricePaise?:number;productId?:string;
 };
 const PREFIX="lovora:order:v1:";
 const DURATION=60*60*24*365;
@@ -38,7 +41,8 @@ export async function readOrder(id:string):Promise<PaidOrder|null>{
  if(out.id!==id||!out.status)return null;
  return {id:out.id,email:out.email||"",sessionId:out.sessionId||"",paymentId:out.paymentId||"",
  status:out.status as OrderStatus,reportId:out.reportId||"",encryptedDraft:out.encryptedDraft||"",createdAt:out.createdAt||"",
- generationAttempts:Number(out.generationAttempts||0),lastAttemptAt:Number(out.lastAttemptAt||0)};
+ generationAttempts:Number(out.generationAttempts||0),lastAttemptAt:Number(out.lastAttemptAt||0),
+ pricePaise:Number(out.pricePaise||ORIGINAL_PRICE_PAISE),productId:out.productId||""};
 }
 export async function patchOrder(id:string,updates:Partial<Omit<PaidOrder,"id">>){
  const entries=Object.entries(updates).flatMap(([name,value])=>[name,value]);
@@ -82,8 +86,8 @@ export function decodeDraft(payload:string):JourneyDraft {
 
 /** All entitlement state transitions are atomic across webhook/return/refund workers. */
 export async function markVerifiedPaid(id:string,paymentId:string):Promise<boolean>{
- const lua="local s=redis.call('HGET',KEYS[1],'status');if not s or s=='revoked' then return 0 end;local p=redis.call('HGET',KEYS[1],'paymentId') or '';if p~='' and p~=ARGV[1] then return 0 end;if s=='ready' then return 1 end;redis.call('HSET',KEYS[1],'status','paid','paymentId',ARGV[1]);return 1";
- return Number(await redis(["EVAL",lua,1,orderKey(id),paymentId]))===1;
+ const lua="local s=redis.call('HGET',KEYS[1],'status');if not s or s=='revoked' then return 0 end;local p=redis.call('HGET',KEYS[1],'paymentId') or '';if p~='' and p~=ARGV[1] then return 0 end;if s=='ready' or s=='paid' then return 1 end;redis.call('HSET',KEYS[1],'status','paid','paymentId',ARGV[1]);if redis.call('HGET',KEYS[1],'pricePaise')==ARGV[2] then redis.call('INCR',KEYS[2]) end;return 1";
+ return Number(await redis(["EVAL",lua,2,orderKey(id),LAUNCH_REDEEMED_KEY,paymentId,PRICE_PAISE]))===1;
 }
 export async function markReadyIfPaid(id:string,paymentId:string,reportId:string):Promise<boolean>{
  const lua="if redis.call('HGET',KEYS[1],'status')~='paid' or redis.call('HGET',KEYS[1],'paymentId')~=ARGV[1] then return 0 end;redis.call('HSET',KEYS[1],'status','ready','reportId',ARGV[2],'encryptedDraft','');return 1";
