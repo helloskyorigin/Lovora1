@@ -57,3 +57,19 @@ const [malicious,maliciousResult]=await jsonResponse("/api/insight",{
 });
 assert.equal(malicious.status,403,JSON.stringify(maliciousResult));
 console.log("New direct birth-to-insight flow and cookie-free encrypted session path work.");
+
+const timedPayload={...payload,timeKnown:true,birthTime:"13:40"};
+const [timedResponse,timedBody]=await jsonResponse("/api/birth-details",{
+ method:"POST",headers:{"content-type":"application/json","origin":base},body:JSON.stringify(timedPayload)
+});
+assert.equal(timedResponse.status,200,JSON.stringify(timedBody));
+assert.equal(timedBody.next,"/insight");
+const [unavailablePreview,guideWhenNoRedis]=await jsonResponse("/api/insight",{
+ method:"POST",headers:{"content-type":"application/json","origin":base,
+  "x-lovora-birth-session":timedBody.sessionToken}
+});
+assert.equal(unavailablePreview.status,200,JSON.stringify(guideWhenNoRedis));
+assert.equal(guideWhenNoRedis.mode,"guide",
+ "If chart budget/provider is unavailable, show an honest guide rather than an error screen");
+assert.equal("insight" in guideWhenNoRedis,false,"Never invent a birth chart while offline");
+console.log("Prokerala/Redis offline still returns usable Love vs Arranged guide, not 503.");
