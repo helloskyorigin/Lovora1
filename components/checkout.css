@@ -18,3 +18,5 @@
 @media(prefers-reduced-motion:reduce){.lovora-checkout__button{transition:none}}
 
 .lovora-checkout__fine a{text-decoration:underline;text-underline-offset:3px;color:#f3d0df}
+
+.lovora-checkout__old{display:flex;align-items:center;gap:12px;margin:3px 0 5px;color:#d9bacb;font-family:'DM Sans',Arial,sans-serif}.lovora-checkout__old del{font-size:20px;text-decoration-thickness:1.5px;opacity:.76}.lovora-checkout__old small{font-size:9px;letter-spacing:.07em;font-weight:700;color:#e9cc9d}

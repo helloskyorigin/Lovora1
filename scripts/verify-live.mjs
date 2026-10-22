@@ -48,8 +48,8 @@ await check("Dodo live product",async()=>{
  });
  if(!r.ok)throw Error("Live product lookup HTTP "+r.status);
  const d=await r.json();
- if(d.product_id!==id||d.is_recurring!==false||d.price?.type!=="one_time_price"||d.price?.currency!=="INR"||d.price?.price!==29900||d.price?.tax_inclusive!==true)throw Error("Product must be INR 299 one-time and tax inclusive");
- return "Live Dodo product verified as one-time INR 299";
+ if(d.product_id!==id||d.is_recurring!==false||d.price?.type!=="one_time_price"||d.price?.currency!=="INR"||d.price?.price!==14900||d.price?.tax_inclusive!==true)throw Error("Product must be INR 149 one-time and tax inclusive");
+ return "Live Dodo product verified as one-time INR 149";
 });
 console.table(report);
 console.log("NOT TESTED: actual charges, webhook delivery, successful report unlocking, historical timezone quality, Resend delivery, merchant approval.");

@@ -17,7 +17,7 @@ const copy={
     note:"Venus is traditionally associated with love and affection. A single placement does not establish your marriage type, marriage date, or future partner.",
     premium:"There's more to your story.",premiumDesc:"The full marriage reading will explore multiple relevant chart indicators and their limitations — not just one planet.",
     chapters:["Love, arranged or family-supported marriage","Traditional marriage timing, where supported","Future partnership and relationship themes","Chart evidence and complete report"],
-    checkout:"Complete report: ₹299 one-time",notYet:"Full report checkout is not connected in this phase. No payment will be charged.",
+    checkout:"Complete report: ₹149 one-time",notYet:"Full report checkout is not connected in this phase. No payment will be charged.",
     lang:"हिंदी",error:"No reading is available right now.",footer:"Astrology is a traditional practice, not a scientifically established way to predict relationships.",
   },
   hi:{
@@ -29,7 +29,7 @@ const copy={
     note:"शुक्र को पारंपरिक ज्योतिष में प्रेम से जोड़ा जाता है। केवल एक ग्रह स्थिति से शादी का प्रकार, तारीख या साथी की पहचान तय नहीं होती।",
     premium:"आपकी कहानी में अभी बहुत कुछ बाकी है।",premiumDesc:"पूरी विवाह रीडिंग कई संबंधित कुंडली संकेतों और सीमाओं को समझाएगी।",
     chapters:["लव, अरेंज या परिवार-सहयोग से विवाह के संकेत","उपयुक्त होने पर पारंपरिक विवाह समय","भविष्य के रिश्तों के विषय","कुंडली के प्रमाण और पूरी रिपोर्ट"],
-    checkout:"पूरी रीडिंग ₹299 एक बार",notYet:"इस चरण में भुगतान नहीं जुड़ा है। कोई राशि नहीं ली जाएगी।",
+    checkout:"पूरी रीडिंग ₹149 एक बार",notYet:"इस चरण में भुगतान नहीं जुड़ा है। कोई राशि नहीं ली जाएगी।",
     lang:"English",error:"अभी रीडिंग उपलब्ध नहीं है।",footer:"ज्योतिष पारंपरिक चिंतन है, रिश्तों की वैज्ञानिक भविष्यवाणी नहीं।",
   },
 } as const;

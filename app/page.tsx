@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import {LaunchOffer} from '@/components/LaunchOffer';
 
 type Lang = 'en' | 'hi';
 const content = {
@@ -9,7 +10,7 @@ const content = {
     eyebrow:'A PERSONAL VEDIC MARRIAGE READING', title1:'Love Marriage', title2:'or Arranged?',
     tagline:'Your story is written in the stars.',
     description:'An intimate journey through the traditional signs of love, marriage, and the future you wonder about.',
-    primary:'Explore my story', free:'A free glimpse first', account:'No account', priceHint:'Complete reading ₹299',
+    primary:'Explore my story', free:'A free glimpse first', account:'No account', priceHint:'Complete reading ₹149 · launch offer',
     previewKicker:'A LITTLE GLIMPSE', previewTitle:'A chapter that feels like yours.',
     previewDesc:'Thoughtfully interpreted from your actual birth chart. Never just another horoscope.',
     sample:'ILLUSTRATIVE PREVIEW', sampleHeading:'Your celestial love nature',
@@ -27,7 +28,7 @@ const content = {
       {n:'03',k:'THE CONNECTION',t:'A future together',d:'Discover the relationship qualities associated with your chart.'},
     ],
     stepsKicker:'BEAUTIFULLY SIMPLE',stepsTitle:'Your stars. Your story.',
-    steps:[{t:'Your birth moment',d:'Date, time and birthplace.'},{t:'Your free glimpse',d:'A personal chart-based insight.'},{t:'Your complete story',d:'Seven chapters, one-time ₹299.'}],
+    steps:[{t:'Your birth moment',d:'Date, time and birthplace.'},{t:'Your free glimpse',d:'A personal chart-based insight.'},{t:'Your complete story',d:'Seven chapters, one-time ₹149.'}],
     chaptersKicker:'THE COMPLETE READING',chaptersTitle:'Seven chapters. One universe — yours.',
     chaptersDesc:'Beautifully written. Gently revealing. Rooted in traditional chart interpretation.',
     chapters:['Your marriage path','Your love nature','Your future partnership','Marriage timing','Life after marriage','Why your chart suggests this','Your keepsake & PDF'],
@@ -38,7 +39,7 @@ const content = {
     priceButton:'See the experience',priceFooter:'Your first glimpse is free.',
     faqKicker:'GOOD TO KNOW', faqTitle:'A little clarity, before the stars.',
     faqs:[
-      ['Is the first glimpse really free?','Yes. You can see a personal chart-based insight before deciding whether to unlock the complete ₹299 report.'],
+      ['Is the first glimpse really free?','Yes. You can see a personal chart-based insight before deciding whether to unlock the complete ₹149 report.'],
       ['Do I need a partner’s name or details?','No. This reading uses your own birth information and cannot identify or reveal the feelings of a real future spouse.'],
       ['What if my birth time is unknown?','Certain house and timing interpretations may not be possible. The actual reading flow will disclose limitations before payment.'],
       ['Can astrology promise my marriage outcome?','No. LOVORA presents traditional astrology for reflection and entertainment, not scientifically verified future predictions.'],
@@ -50,7 +51,7 @@ const content = {
     eyebrow:'आपकी व्यक्तिगत वैदिक विवाह रीडिंग',title1:'लव मैरिज',title2:'या अरेंज मैरिज?',
     tagline:'आपकी कहानी, सितारों की ज़ुबानी।',
     description:'प्रेम, शादी और रिश्तों के पारंपरिक ज्योतिषीय संकेतों को अपनी जन्मकुंडली से जानें।',
-    primary:'अपनी कहानी देखें',free:'पहली झलक मुफ़्त',account:'बिना अकाउंट',priceHint:'पूरी रीडिंग ₹299',
+    primary:'अपनी कहानी देखें',free:'पहली झलक मुफ़्त',account:'बिना अकाउंट',priceHint:'पूरी रीडिंग ₹149 · लॉन्च ऑफ़र',
     previewKicker:'आपकी कहानी की झलक',previewTitle:'एक कहानी, जो सिर्फ़ आपकी है।',
     previewDesc:'आपकी वास्तविक जन्मकुंडली से जुड़ी पारंपरिक व्याख्या — सामान्य राशिफल नहीं।',
     sample:'सिर्फ़ उदाहरण',sampleHeading:'आपके प्रेम का स्वभाव',
@@ -68,7 +69,7 @@ const content = {
       {n:'03',k:'रिश्ते',t:'भविष्य का साथ',d:'रिश्तों से जुड़े पारंपरिक गुणों और विषयों को समझें।'},
     ],
     stepsKicker:'बिल्कुल आसान',stepsTitle:'आपके सितारे। आपकी कहानी।',
-    steps:[{t:'आपका जन्म विवरण',d:'तारीख, समय और जन्मस्थान।'},{t:'आपकी मुफ़्त झलक',d:'कुंडली पर आधारित एक संकेत।'},{t:'आपकी पूरी कहानी',d:'सात अध्याय, एक बार ₹299।'}],
+    steps:[{t:'आपका जन्म विवरण',d:'तारीख, समय और जन्मस्थान।'},{t:'आपकी मुफ़्त झलक',d:'कुंडली पर आधारित एक संकेत।'},{t:'आपकी पूरी कहानी',d:'सात अध्याय, एक बार ₹149।'}],
     chaptersKicker:'पूरी रीडिंग',chaptersTitle:'सात अध्याय। आपकी अपनी कहानी।',
     chaptersDesc:'सुंदर लेखन और पारंपरिक ज्योतिषीय संकेतों की सरल व्याख्या।',
     chapters:['आपका विवाह मार्ग','आपका प्रेम स्वभाव','भविष्य की साझेदारी','विवाह का समय','विवाह के बाद जीवन','आपकी कुंडली के संकेत','आपका कार्ड और PDF'],
@@ -79,7 +80,7 @@ const content = {
     priceButton:'अनुभव की झलक देखें',priceFooter:'आपकी पहली झलक मुफ़्त है।',
     faqKicker:'ज़रूरी बातें',faqTitle:'सितारों से पहले, कुछ जवाब।',
     faqs:[
-      ['क्या पहली झलक मुफ़्त है?','हाँ। आप एक व्यक्तिगत संकेत देख सकते हैं और बाद में पूरी ₹299 रीडिंग लेने का निर्णय कर सकते हैं।'],
+      ['क्या पहली झलक मुफ़्त है?','हाँ। आप एक व्यक्तिगत संकेत देख सकते हैं और बाद में पूरी ₹149 रीडिंग लेने का निर्णय कर सकते हैं।'],
       ['क्या पार्टनर का नाम चाहिए?','नहीं। यह रीडिंग आपकी जन्मकुंडली पर आधारित है। इससे असली भविष्य के साथी की पहचान या भावनाएँ पता नहीं चलतीं।'],
       ['अगर जन्म का समय पता नहीं हो?','कुछ भाव और समय संबंधी व्याख्याएँ संभव नहीं होंगी। भुगतान से पहले सीमाएँ बताई जाएँगी।'],
       ['क्या ज्योतिष पक्का भविष्य बता सकता है?','नहीं। LOVORA पारंपरिक ज्योतिष को व्यक्तिगत चिंतन और मनोरंजन के लिए प्रस्तुत करता है।'],
@@ -154,6 +155,7 @@ export default function Home() {
         <nav className="nav" aria-label="Main navigation"><a href="#preview">{c.nav[0]}</a><a href="#discover">{c.nav[1]}</a><a href="#how">{c.nav[2]}</a></nav>
         <button className="language" onClick={()=>setLang(lang==='en'?'hi':'en')} aria-label={lang==='en'?'Switch to Hindi':'Switch to English'}>◎ &nbsp;{c.lang}</button>
       </header>
+      <div className="wrap"><LaunchOffer lang={lang} placement="hero"/></div>
       <div className="hero wrap">
         <div className="hero-copy">
           <span className="eyebrow bright"><b>✦</b>{c.eyebrow}</span>
@@ -201,7 +203,7 @@ export default function Home() {
 
     <section className="section pricing-section" id="pricing"><div className="wrap pricing-layout">
       <div className="pricing-intro" data-reveal><span className="eyebrow"><b>✦</b>{c.priceKicker}</span><h2>{c.priceTitle}</h2><p>{c.priceDescription}</p></div>
-      <div className="pricing-card" data-reveal><div className="pricing-star">✦</div><div className="pricing-amount">₹299</div><p className="pricing-once">{c.priceSub}</p><div className="pricing-divider"/><ul>{c.priceFeatures.map(t=><li key={t}><span>✓</span>{t}</li>)}</ul>
+      <div className="pricing-card" data-reveal><div className="pricing-star">✦</div><div className="pricing-old"><del>₹299</del> <span>50% OFF</span></div><div className="pricing-amount">₹149</div><p className="pricing-once">{c.priceSub}</p><LaunchOffer lang={lang} placement="pricing"/><div className="pricing-divider"/><ul>{c.priceFeatures.map(t=><li key={t}><span>✓</span>{t}</li>)}</ul>
         <a className="cta primary pricing-cta" href={`/birth-details?lang=${lang}`}>{c.priceButton}<span aria-hidden="true">↗</span></a><p className="pricing-note">{c.priceFooter}</p>
       </div>
     </div></section>

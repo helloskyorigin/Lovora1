@@ -31,3 +31,28 @@
 .lovora-legal-links a{color:#e5c4d6;text-underline-offset:3px}
 .lovora-legal-links a:hover{text-decoration:underline}
 @media(max-width:760px){.lovora-legal-links{justify-content:flex-start}}
+
+/* Small, authentic launch offer strip — no fake ratings or simulated sales */
+.launch-offer{display:flex;align-items:center;justify-content:space-between;gap:14px 23px;flex-wrap:wrap;border:1px solid #e9c5da3c;border-radius:13px;background:linear-gradient(108deg,#3d264c99,#38214455);padding:12px 17px;color:#fbe6ef;box-shadow:0 14px 36px #17091f14}
+.launch-offer--hero{margin:5px 0 -3px;max-width:900px}
+.launch-offer__heading{font-size:11px;letter-spacing:.01em;display:flex;align-items:center;gap:9px;font-weight:600}
+.launch-offer__heart{font-size:19px;color:#eeb9ca}
+.launch-offer__price{display:flex;align-items:center;gap:9px;white-space:nowrap}
+.launch-offer__price del{font-size:14px;opacity:.58}
+.launch-offer__price strong{font-size:22px;font-weight:700;color:#f7d3dd}
+.launch-offer__price small{color:#e9c58b;font-size:10px;font-weight:700}
+.launch-offer__progress{flex:1 1 165px;max-width:240px;min-width:120px;display:grid;gap:7px}
+.launch-offer__progress-label{display:flex;justify-content:space-between;gap:10px;color:#d8c3dc;font-size:9px}
+.launch-offer__progress-label strong{color:#f1d3e6;font-weight:600}
+.launch-offer__track{height:4px;border-radius:10px;background:#ffffff24;overflow:hidden}
+.launch-offer__fill{height:100%;border-radius:10px;background:linear-gradient(90deg,#efb1cc,#e7c58d);transition:width .35s}
+.launch-offer--pricing{background:transparent;border:0;box-shadow:none;display:block;padding:16px 2px 0}
+.launch-offer--pricing .launch-offer__price{display:none}
+.launch-offer--pricing .launch-offer__heading{justify-content:center;color:#f8d8e8;margin-bottom:11px}
+.launch-offer--pricing .launch-offer__progress{max-width:none;width:100%}
+.launch-offer--pricing .launch-offer__progress-label{color:#e4c8e2}
+.launch-offer--pricing .launch-offer__progress-label strong{color:#f9e4eb}
+.pricing-old{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:12px;color:#ead2de}
+.pricing-old del{font-size:23px;opacity:.63;text-decoration-thickness:1.5px}
+.pricing-old span{font-size:10px;letter-spacing:.1em;background:#e8c18b20;border-radius:30px;padding:6px 9px;color:#f7d7a4;font-weight:700}
+@media(max-width:760px){.launch-offer--hero{margin:4px 0 -19px;padding:11px 13px;gap:8px 12px}.launch-offer__heading{font-size:10px}.launch-offer__price strong{font-size:19px}.launch-offer__progress{flex:1 1 100%;max-width:none}.launch-offer__progress-label{font-size:9px}.hero-copy{padding-top:40px}}
