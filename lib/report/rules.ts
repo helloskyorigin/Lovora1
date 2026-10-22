@@ -129,7 +129,7 @@ export function createMarriageReport(draft:JourneyDraft,raw:RawChartData, report
   const signals={love:0,family:0,neutral:0};
   const evidence:ChartEvidence[]=[];
   const append=(id:string,title:string,observation:string,meaning:string,type:ChartEvidence["type"],names:PlanetName[])=>evidence.push({id,title,observation,meaning,type,planets:names});
-  append("asc","The birth-chart rising sign","Ascendant in "+rising.sign,"Whole-sign houses are derived from this verified sign, using the Lahiri sidereal zodiac.","support",["Ascendant"]);
+  append("asc","The birth-chart rising sign","Ascendant in "+rising.sign,"Whole-sign houses are derived from the calculated ascendant using a sidereal zodiac. Locally generated positions use an approximate Lahiri offset.","support",["Ascendant"]);
   append("houses","Romance and partnership signs","5th house: "+fifth+" ("+fifthLord+"); 7th house: "+seventh+" ("+seventhLord+")","In this traditional model, the 5th house is linked with romance and the 7th with committed partnership.","support",[fifthLord,seventhLord]);
   const sameRuler=fifthLord===seventhLord;
   if(sameRuler){
@@ -200,7 +200,7 @@ export function createMarriageReport(draft:JourneyDraft,raw:RawChartData, report
         "The report cannot tell whether your marriage will be happy, troubled, early or late. It can only frame conventional astrological symbols as prompts for reflection."],
       evidenceIds:["seven","moon"]},
     {id:"evidence",number:6,eyebrow:"THE WHY",title:"The Chart Behind the Story",introduction:"Every major interpretation has a checkable source.",
-      paragraphs:["Birth-chart rising sign: "+rising.sign+". Traditional Lahiri sidereal whole-sign houses are calculated from this verified ascendant. Romance sign: "+fifth+". Partnership sign: "+seventh+".",
+      paragraphs:["Birth-chart rising sign: "+rising.sign+". Traditional sidereal whole-sign houses are calculated from the ascendant; local astronomy uses an approximate Lahiri offset. Romance sign: "+fifth+". Partnership sign: "+seventh+".",
         "Venus: "+venus.sign+" (house "+venus.wholeSignHouse+"). Moon: "+moon.sign+" (house "+moon.wholeSignHouse+"). Partnership ruler: "+seventhLord+" in "+seventhP.sign+". These chart positions were calculated or supplied by the named source and interpreted by the rules engine.",
         "No unverifiable probabilities, fabricated marriage scores or numerical success rates are included. You can inspect every supporting indicator below."],
       evidenceIds:evidence.map(e=>e.id)},

@@ -172,3 +172,5 @@
 .lovora-result__main-unlock:hover{background:#ffd0e5}
 .lovora-result__main-unlock span{font-size:20px}
 @media(max-width:600px){.lovora-choice-backdrop{padding:12px}.lovora-choice{padding:22px 18px;border-radius:18px}.lovora-result__main-unlock{margin-top:15px}}
+
+.lovora-result__local-note{margin:13px 0;color:#e5ccab!important;font-size:11px!important;line-height:1.65;border-top:1px solid #f1decb23;padding-top:11px}

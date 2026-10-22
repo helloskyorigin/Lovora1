@@ -74,7 +74,9 @@ export function ReportExperience({report,demo=false}:{report:MarriageStoryReport
                 </button>
               ))}
             </nav>
-            <p>{hi?"प्रमाणित ग्रह स्थितियों की पारंपरिक व्याख्या; वैज्ञानिक भविष्यवाणी नहीं।":"Written from your verified planetary placements. Not a scientific forecast."}</p>
+            <p>{view.source.provider==="LOVORA local astronomy"
+              ?(hi?"स्थानीय खगोलीय गणना · अनुमानित लाहिड़ी अयनांश; वैज्ञानिक भविष्यवाणी नहीं।":"Locally computed astronomical positions, with approximate Lahiri offset. Not a scientific forecast.")
+              :(hi?"सत्यापित ग्रह स्थितियों की पारंपरिक व्याख्या; वैज्ञानिक भविष्यवाणी नहीं।":"Written from provider-returned planetary placements. Not a scientific forecast.")}</p>
           </div>
         </aside>
         <div className="report-content">
@@ -157,7 +159,9 @@ export function ReportExperience({report,demo=false}:{report:MarriageStoryReport
           ))}
           <div className="report-method">
             <h3>{hi?"आपकी रीडिंग कैसे बनी":"How your reading was made"}</h3>
-            <p>{hi?"ग्रह गणना स्रोत: ":"Astrological source: "}{view.source.provider} · {view.source.ayanamsa}. {hi?"सत्यापित लग्न से पूरे राशि वाले भाव निकाले गए हैं।":"Sidereal positions and whole-sign house interpretation from the verified rising sign."}</p>
+            <p>{hi?"ग्रह गणना स्रोत: ":"Astrological source: "}{view.source.provider} · {view.source.ayanamsa}. {view.source.provider==="LOVORA local astronomy"
+              ?(hi?"स्थानीय गणना से लग्न और राशि आधारित भाव निकाले गए हैं; राशि सीमा के करीब त्रुटि संभव है।":"Ascendant and whole-sign houses are computed locally; placements near sign boundaries may differ.")
+              :(hi?"सत्यापित लग्न से पूरे राशि वाले भाव निकाले गए हैं।":"Sidereal positions and whole-sign house interpretation from the calculated rising sign.")}</p>
             <p>{hi?"प्रयुक्त तरीके: ":"Used: "}{view.source.methods.join(" · ")}.</p>
             {view.source.partial.length>0&&<p>{hi?"डेटा की सीमाएँ: ":"Data limitations: "}{view.source.partial.join(" · ")}.</p>}
             <p>{view.disclaimer}</p>
