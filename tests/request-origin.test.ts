@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {isSameOriginRequest} from "../lib/request-origin";
-const req=(url:string,headers:Record<string,string>)=>new Request(url,{headers});
+const req=(url:string,headers:Record<string,string|undefined>)=>new Request(url,{headers:Object.fromEntries(Object.entries(headers).filter(([,value])=>value!==undefined)) as Record<string,string>});
 test("same-origin calls remain accepted",()=>{assert.equal(isSameOriginRequest(req("https://lovora.ai.studio/api/birth-details",{origin:"https://lovora.ai.studio"})),true);});
 test("proxy forwarded browser host remains valid",()=>{assert.equal(isSameOriginRequest(req("http://localhost:3000/api/birth-details",{origin:"https://aistudio.google.com",host:"localhost:3000","x-forwarded-host":"aistudio.google.com"})),true);});
 test("local IPv4 loopback alias stays valid",()=>{assert.equal(isSameOriginRequest(req("http://localhost:3000/api/birth-details",{origin:"http://127.0.0.1:3000",host:"localhost:3000"})),true);});
