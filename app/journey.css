@@ -95,3 +95,49 @@
 .lovora-secondary-action{display:inline-block;margin:12px 0;padding:11px 16px;border:1px solid #f0c8df70;border-radius:9px;background:#ffffff0b;color:#ffe0ef;font:600 12px 'DM Sans',Arial,sans-serif;cursor:pointer;text-decoration:none}
 .lovora-secondary-action:hover{background:#ffffff20}
 @media(max-width:640px){.lovora-two-paths{grid-template-columns:1fr;gap:11px}.lovora-path{min-height:0;padding:20px 22px}.lovora-verification{padding:21px 20px}.journey--love-choice .journey__result-heading{padding:18px 0 9px}.journey--love-choice .journey__title{font-size:clamp(44px,11vw,65px)}}
+
+/* Compact, purposeful result. Only verified chart observations influence the verdict. */
+.journey--compact-result .journey__wrap{max-width:800px}
+.lovora-result{margin:auto;max-width:650px;padding:38px 0 72px}
+.lovora-result__intro{text-align:center;padding:0 0 23px}
+.lovora-result__intro h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(43px,7vw,72px);line-height:1.04;font-weight:500;letter-spacing:-.035em;margin:14px 0 8px;color:#fff0e7}
+.lovora-result__intro>p:last-child{font-size:12px;line-height:1.75;color:#ddc8de;margin:0 auto;max-width:410px}
+.lovora-result__verdict{border:1px solid #f2c9e25c;background:linear-gradient(125deg,#4c2a538b,#362042d9);border-radius:19px;padding:29px 30px;box-shadow:0 20px 65px #170b1f22}
+.lovora-result__kicker{color:#f0cb91!important;letter-spacing:.15em;font-size:10px!important;font-weight:700;margin:0 0 14px!important}
+.lovora-result__verdict h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(30px,5vw,44px);line-height:1.12;font-weight:500;color:#ffe1ed;margin:0 0 9px}
+.lovora-result__verdict>p:not(.lovora-result__kicker){font-size:12px;line-height:1.8;color:#e9d3e2}
+.lovora-result__small{font-size:10px!important;color:#c9b4ca!important;margin-bottom:0;padding-top:14px;border-top:1px solid #ffffff1d}
+.lovora-result__retry{border:1px solid #d5a5c2b5;padding:9px 16px;background:#f1bfdc1b;border-radius:9px;color:#ffe0ec;margin:10px 0;cursor:pointer}
+.lovora-result__retry:disabled{opacity:.6}
+.lovora-result__waiting{min-height:165px;border:1px solid #e8c6da59;border-radius:16px;display:grid;place-items:center;color:#e3cedd;font-size:13px}
+.lovora-result__waiting span{display:block;text-align:center;font-size:46px}
+.lovora-result__locked{margin-top:18px;background:linear-gradient(160deg,#362445,#2d1b3f);border:1px solid #e6b5d555;border-radius:19px;padding:26px 27px 29px}
+.lovora-result__offer{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#e6c58c;font-size:10px;font-weight:700;letter-spacing:.08em}
+.lovora-result__offer>div{display:flex;align-items:center;gap:10px}
+.lovora-result__offer del{color:#bcabb8;font-size:15px;font-weight:400}
+.lovora-result__offer strong{font-size:24px;color:#ffe2ec;letter-spacing:normal}
+.lovora-result__locked h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;color:#ffe7f1;font-size:clamp(32px,5vw,43px);line-height:1.05;margin:14px 0 8px}
+.lovora-result__locked>p{font-size:12px;line-height:1.7;color:#d4bfd4;margin:0 0 18px}
+.lovora-result__blurred{display:flex;gap:13px;align-items:center;padding:14px 0;border-top:1px solid #ffffff18;color:#e8d4e5}
+.lovora-result__blurred>span{font-size:11px;color:#d9b28c}
+.lovora-result__blurred>span:last-child{margin-left:auto}
+.lovora-result__blurred>div{flex:1;min-width:0}
+.lovora-result__blurred b{display:block;font-size:12px;font-weight:500;line-height:1.5}
+.lovora-result__blurred i{display:block;width:60%;height:3px;border-radius:10px;background:linear-gradient(90deg,#d2adc87f,#d2adc800);margin-top:6px}
+.lovora-result__notice{color:#ead0a1!important;font-size:12px!important;margin:14px 0!important}
+.lovora-result__sample{display:inline-block;font-size:11px;text-decoration:underline;text-underline-offset:4px;color:#f1d0b1;margin-top:17px}
+.lovora-result__attribution{text-align:center;margin:23px 0;color:#c8afc7;font-size:10px}
+.lovora-result__attribution a{text-decoration:underline;text-underline-offset:3px}
+.journey--scan{min-height:100dvh}
+.lovora-scan{min-height:calc(100dvh - 90px);max-width:550px;margin:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:50px 0 90px}
+.lovora-scan__orbit{width:170px;height:170px;border:1px solid #deb8ce8a;border-radius:50%;display:grid;place-items:center;position:relative;margin:0 auto 46px;box-shadow:0 0 0 15px #b984ad0e,0 0 80px #bf8fbc12}
+.lovora-scan__orbit span{font-size:74px;color:#f2bed7;animation:journey-float 2.5s ease-in-out infinite}
+.lovora-scan__orbit i{position:absolute;inset:-14px;border:1px dashed #e2b39d91;border-radius:50%;animation:journey-spin 26s linear infinite}
+.lovora-scan h1{font-family:'Cormorant Garamond',Georgia,serif;color:#fff0e8;font-size:clamp(49px,7vw,77px);font-weight:500;line-height:1.06;margin:18px 0}
+.lovora-scan h1 em{display:block;color:#f0b6cf}
+.lovora-scan>p[role=status]{color:#e4cfe1;font-size:13px}
+.lovora-scan__steps{display:flex;gap:15px;flex-wrap:wrap;justify-content:center;margin-top:30px;color:#d4bcce;font-size:11px}
+.lovora-scan__fallback{font-size:11px;color:#e6cbab;line-height:1.7}
+.journey__scan-language{font-size:11px;color:#d8c8d9}
+@media(max-width:600px){.lovora-result{padding-top:21px}.lovora-result__intro{padding-bottom:18px}.lovora-result__verdict{padding:21px 19px}.lovora-result__locked{padding:19px 18px}.lovora-result__intro h1{font-size:clamp(43px,12vw,59px)}.lovora-scan__orbit{width:140px;height:140px;margin-bottom:35px}.lovora-scan{padding-top:35px}.lovora-scan h1{font-size:clamp(44px,11vw,58px)}}
+@media(prefers-reduced-motion:reduce){.lovora-scan__orbit span,.lovora-scan__orbit i{animation:none}}

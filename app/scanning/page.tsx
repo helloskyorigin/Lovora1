@@ -1,5 +1,5 @@
 "use client";
-import {Suspense,useEffect,useRef,useState} from "react";
+import {Suspense,useEffect,useState} from "react";
 import Link from "next/link";
 import {useRouter,useSearchParams} from "next/navigation";
 import {getBirthSessionHeaders,rememberBirthSession} from "@/lib/client-birth-session";
@@ -9,12 +9,11 @@ import "../journey.css";
 
 type Result={ok?:boolean;mode?:"verified"|"guide";insight?:unknown;sessionToken?:string;reason?:string};
 function ScanFlow(){
- const params=useSearchParams(),router=useRouter(),once=useRef(false);
+ const params=useSearchParams(),router=useRouter();
  const hi=params.get("lang")==="hi",lang=hi?"hi":"en";
  const [status,setStatus]=useState(hi?"आपकी जन्म-जानकारी जाँची जा रही है…":"Checking your birth details…");
  const [problem,setProblem]=useState("");
  useEffect(()=>{
-  if(once.current)return;once.current=true;
   let closed=false;
   (async()=>{
    try{

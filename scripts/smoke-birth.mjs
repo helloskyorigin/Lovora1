@@ -40,7 +40,7 @@ const [crossSite,crossBody]=await jsonResponse("/api/birth-details",{
 });
 assert.equal(crossSite.status,403,JSON.stringify(crossBody));
 
-assert.equal(body.next,"/insight");
+assert.equal(body.next,"/scanning");
 assert.ok(typeof body.sessionToken==="string"&&body.sessionToken.split(".").length===3);
 const [fromToken,tokenPayload]=await jsonResponse("/api/birth-details",{headers:{"x-lovora-birth-session":body.sessionToken}});
 assert.equal(fromToken.status,200,JSON.stringify(tokenPayload));
@@ -63,7 +63,7 @@ const [timedResponse,timedBody]=await jsonResponse("/api/birth-details",{
  method:"POST",headers:{"content-type":"application/json","origin":base},body:JSON.stringify(timedPayload)
 });
 assert.equal(timedResponse.status,200,JSON.stringify(timedBody));
-assert.equal(timedBody.next,"/insight");
+assert.equal(timedBody.next,"/scanning");
 const [unavailablePreview,guideWhenNoRedis]=await jsonResponse("/api/insight",{
  method:"POST",headers:{"content-type":"application/json","origin":base,
   "x-lovora-birth-session":timedBody.sessionToken}

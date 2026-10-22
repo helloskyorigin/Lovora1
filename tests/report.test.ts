@@ -122,3 +122,15 @@ test("Hindi mode keeps seven full chapters and translated personal deep dives",(
  assert.notEqual(hindi.chapters[0].deepDive?.[0].title,english.chapters[0].deepDive?.[0].title);
  assert.ok(hindi.chapters.every(ch=>ch.paragraphs.length>=2));
 });
+
+test("free leaning uses verified 5th and 7th indicators but never claims arranged probability",async()=>{
+ const {previewMarriagePath}=await import("../lib/report/path-preview");
+ const result=previewMarriagePath(source().planets);
+ assert.equal(result.available,true);
+ assert.ok(["romance-linked","undetermined"].includes(result.leaning));
+ assert.ok(Number.isInteger(result.loveIndicators));
+ assert.equal("arrangedChance" in result,false);
+ const altered=previewMarriagePath(source("Taurus").planets);
+ assert.ok(altered.loveIndicators<=result.loveIndicators);
+ assert.throws(()=>previewMarriagePath(source().planets.filter(p=>p.name!=="Ascendant")),/MISSING_ASCENDANT/);
+});
