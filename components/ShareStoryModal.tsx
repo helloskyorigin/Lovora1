@@ -16,8 +16,9 @@ function drawCard(copy:ReturnType<typeof buildShareCopy>):HTMLCanvasElement{
  const canvas=document.createElement("canvas");
  canvas.width=1080;
  canvas.height=1920;
- const ctx=canvas.getContext("2d");
- if(!ctx)throw new Error("Your browser cannot create a story image.");
+ const context=canvas.getContext("2d");
+ if(!context)throw new Error("Your browser cannot create a story image.");
+ const ctx:CanvasRenderingContext2D=context;
  const w=canvas.width,h=canvas.height;
  const background=ctx.createLinearGradient(0,0,w,h);
  background.addColorStop(0,"#21122f");
