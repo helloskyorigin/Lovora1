@@ -1,6 +1,7 @@
 import "server-only";
 import type { JourneyDraft, PreviewInsight } from "./context";
 import { resolveBirthUTC } from "./birth-time";
+import {previewMarriagePath} from "./report/path-preview";
 
 type OAuthToken = { access_token?: unknown; expires_in?: unknown };
 type Position = { id?: unknown; name?: unknown; rasi?: { id?: unknown; name?: unknown } };
@@ -78,7 +79,8 @@ function extractVenus(value: PlanetPayload): PreviewInsight {
   const index = ZODIAC.findIndex(([name]) => name.toLowerCase() === (venus.rasi?.name as string).trim().toLowerCase());
   if (index < 0) throw new Error("UNSUPPORTED_CHART_RESPONSE");
   const [sign, descriptionEn, descriptionHi] = ZODIAC[index];
-  return { planet: "Venus", sign, signId: index + 1, descriptionEn, descriptionHi,
+  const marriagePath=previewMarriagePath(planets);
+  return { marriagePath, planet: "Venus", sign, signId: index + 1, descriptionEn, descriptionHi,
     source: "Prokerala planet-position", ayanamsa: "Lahiri", generatedAt: Date.now() };
 }
 

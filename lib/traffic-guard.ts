@@ -22,9 +22,25 @@ function fingerprint(request:NextRequest):string{
  if(!secret||secret.length<32)throw new Error("RATE_SECRET_MISSING");
  return createHmac("sha256",secret).update(ip.slice(0,100)).digest("hex").slice(0,32);
 }
-/** Fail closed if Redis is offline: public traffic must never drain paid provider quota. */
+const previewBudgets=new Map<string,{count:number,expires:number}>();
+function localPreviewLimit(key:string,max:number,seconds:number):boolean{
+ const now=Date.now();
+ if(previewBudgets.size>2000)previewBudgets.clear();
+ const entry=previewBudgets.get(key);
+ const next=entry&&entry.expires>now?{count:entry.count+1,expires:entry.expires}:{count:1,expires:now+seconds*1000};
+ previewBudgets.set(key,next);
+ return next.count<=max;
+}
+/** Production always fails closed on missing Redis, protecting provider credits. */
 export async function allowPublicCost(request:NextRequest,kind:PublicCost):Promise<boolean>{
  const config=limits[kind];
+ // AI Studio dev previews can run without Upstash; still cap chargeable calls.
+ if(process.env.NODE_ENV!=="production"&&(!process.env.UPSTASH_REDIS_REST_URL||!process.env.UPSTASH_REDIS_REST_TOKEN)){
+  const ip=request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()||"local";
+  const day=new Date().toISOString().slice(0,10);
+  return localPreviewLimit("dev:"+kind+":"+ip,Math.min(config.perIp,4),3600)&&
+    localPreviewLimit("dev:day:"+kind+":"+day,Math.min(config.perDay,25),86400);
+ }
  const key="public:"+kind+":"+fingerprint(request);
  if(!await limitAttempts(key,config.perIp,3600))return false;
  // A shared daily budget prevents proxy IP rotation from exhausting the paid APIs.

@@ -7,6 +7,7 @@ export type RelationshipInterest = (typeof INTERESTS)[number];
 export type RelationshipContext = { status: RelationshipStatus; interest: RelationshipInterest };
 
 export type PreviewInsight = {
+  marriagePath?: import("./report/path-preview").PathPreview;
   planet: "Venus";
   sign: string;
   signId: number;

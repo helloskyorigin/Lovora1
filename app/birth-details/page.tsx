@@ -134,7 +134,7 @@ function BirthDetailsForm() {
       if (!res.ok || !json.ok) throw new Error(json.error || c.failed);
       forgetBirthSession();
       rememberBirthSession(json.sessionToken);
-      router.push((json.next || "/insight") + "?lang=" + language);
+      router.push((json.next || "/scanning") + "?lang=" + language);
     } catch (e) {
       setError(e instanceof Error ? e.message : c.failed);
     } finally {
