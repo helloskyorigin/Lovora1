@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { searchCities } from "@/lib/geonames";
+import { searchCities } from "@/lib/city-directory";
 import { allowPublicCost } from "@/lib/traffic-guard";
 
 export const runtime = "nodejs";
@@ -13,9 +13,9 @@ export async function GET(request: NextRequest) {
   try {
     if(!await allowPublicCost(request,"places"))return NextResponse.json({results:[],error:"Birth city searches have reached their temporary limit. Try again later."},{status:429,headers:{"Cache-Control":"no-store"}});
     const results = await searchCities(term);
-    return NextResponse.json({ results, attribution: "GeoNames" }, { headers: { "Cache-Control": "private, max-age=0" } });
+    return NextResponse.json({ results, attribution: "Offline community cities database" }, { headers: { "Cache-Control": "private, max-age=0" } });
   } catch (error) {
-    console.error("GeoNames city lookup failed:", error instanceof Error ? error.message : "Unknown error");
-    return NextResponse.json({ results: [], error: "City search is unavailable. Check the GeoNames configuration or retry." }, { status: 503 });
+    console.error("Offline city lookup failed:", error instanceof Error ? error.message : "Unknown error");
+    return NextResponse.json({ results: [], error: "City search is unavailable. Please try again." }, { status: 503 });
   }
 }

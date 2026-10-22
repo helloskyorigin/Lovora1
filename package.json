@@ -8,13 +8,16 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",
-    "preflight": "node --env-file-if-exists=.env.local scripts/preflight.mjs"
+    "preflight": "node --env-file-if-exists=.env.local scripts/preflight.mjs",
+    "verify:live": "node --env-file-if-exists=.env.local scripts/verify-live.mjs"
   },
   "dependencies": {
     "next": "^15.5.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "standardwebhooks": "^1.1.1"
+    "standardwebhooks": "^1.1.1",
+    "countries-states-cities-service": "1.5.1",
+    "@photostructure/tz-lookup": "11.7.0"
   },
   "devDependencies": {
     "@types/node": "^22.15.0",

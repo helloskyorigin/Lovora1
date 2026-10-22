@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateBirthInput } from "@/lib/birth";
-import { getVerifiedPlace } from "@/lib/geonames";
+import { getVerifiedPlace } from "@/lib/city-directory";
 import { allowPublicCost } from "@/lib/traffic-guard";
 import { BIRTH_COOKIE, BIRTH_TTL_SECONDS, readBirthDraft, sealBirthDraft } from "@/lib/birth-session";
 import type { BirthDraft } from "@/lib/birth";

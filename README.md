@@ -164,3 +164,16 @@ LOVORA_SUPPORT_EMAIL=
 Run `npm run preflight` locally after configuring `.env.local`, or run it in a provisioned deployment shell. It verifies required keys **by presence only**, HTTPS origin, paid-mode settings, and cost ceilings. It deliberately **does not send paid requests**, publish a site, fetch payment data, claim merchant approval, or verify external credentials; conduct provider-specific sandbox tests manually.
 
 If checkout is disabled by default, missing payment settings are reported as preparation tasks, not reasons to expose a nonfunctional live pay button. **An eligible adult merchant must obtain Dodo approval** and supply verified contact/operating details before actual charges.
+
+
+## Offline birthplace directory (Phase 8)
+
+City autocomplete and city resolution use the bundled package `countries-states-cities-service@1.5.1` and local latitude/longitude timezone lookup via `@photostructure/tz-lookup@11.7.0`. **No GeoNames web services, account, username or HTTP calls are required at runtime.** The old `GEONAMES_USERNAME` configuration is obsolete.
+
+City coverage is broad but not exhaustive; some smaller villages may be absent. Timezone boundaries from a compressed geographic dataset are approximations, especially around borders; unusual/historic birth times need further verification before charging users. Never invent location coordinates.
+
+**Attribution:** Geographic source data is from dr5hn/countries-states-cities-database (ODbL, attribution required) and GeoNames (CC BY 4.0, attribution required). The npm wrapper is MIT licensed. Timezone lookup uses CC0 data. Review dataset redistribution/share-alike terms before commercial publishing.
+
+## Read-only live provider verification
+
+After the production variables are configured in the **server environment** (never GitHub), run `npm run verify:live` from a trusted shell with a protected `.env.local`. It checks the active switches, Upstash PING, Prokerala OAuth and the Dodo **live** ₹299 one-time tax-inclusive product. It performs **no purchase**, creates **no checkout**, sends **no email**, and cannot validate webhook delivery or real unlock. Never put credentials in the repository or paste them into chats. A green check does not prove merchant approval or successful live settlement. Conduct an authorized end-to-end transaction only after merchant approval, and verify Dodo webhook delivery plus report unlock and email recovery before public launch.
