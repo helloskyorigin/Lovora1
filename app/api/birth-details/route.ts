@@ -1,3 +1,4 @@
+import { isSameOriginRequest } from "@/lib/request-origin";
 import { NextRequest, NextResponse } from "next/server";
 import { validateBirthInput } from "@/lib/birth";
 import { getVerifiedPlace } from "@/lib/city-directory";
@@ -16,8 +17,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const origin = request.headers.get("origin");
-  if (origin && origin !== new URL(request.url).origin) {
+  if (!isSameOriginRequest(request)) {
     return NextResponse.json({ ok: false, error: "Invalid request origin." }, { status: 403, headers });
   }
   if (!request.headers.get("content-type")?.includes("application/json")) {
@@ -71,8 +71,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
-  const origin = request.headers.get("origin");
-  if (origin && origin !== new URL(request.url).origin) {
+  if (!isSameOriginRequest(request)) {
     return NextResponse.json({ ok: false, error: "Invalid request origin." }, { status: 403, headers });
   }
   const response = NextResponse.json({ ok: true }, { headers });

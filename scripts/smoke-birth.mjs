@@ -33,3 +33,9 @@ const [denied,bad]=await jsonResponse("/api/birth-details",{
 });
 assert.equal(denied.status,400,JSON.stringify(bad));
 console.log("Birth-details POST, encrypted cookie and GET are working for Siwan.");
+
+const [crossSite,crossBody]=await jsonResponse("/api/birth-details",{
+ method:"POST",headers:{"content-type":"application/json","origin":"https://attacker.example","sec-fetch-site":"cross-site"},
+ body:JSON.stringify(payload)
+});
+assert.equal(crossSite.status,403,JSON.stringify(crossBody));

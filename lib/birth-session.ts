@@ -5,8 +5,12 @@ import type { BirthDraft } from "./birth";
 export const BIRTH_COOKIE = "lovora_birth_draft";
 export const BIRTH_TTL_SECONDS = 60 * 60 * 24;
 
+// Development preview only. Rotates on restart; production requires a persistent secret.
+const previewOnlyKey = randomBytes(32);
+
 function key(): Buffer {
   const secret = process.env.BIRTH_SESSION_SECRET;
+  if (!secret && process.env.NODE_ENV !== "production") return previewOnlyKey;
   if (!secret || secret.length < 32) {
     throw new Error("BIRTH_SESSION_SECRET must be configured with at least 32 characters.");
   }

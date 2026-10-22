@@ -1,3 +1,4 @@
+import { isSameOriginRequest } from "@/lib/request-origin";
 import { NextRequest, NextResponse } from "next/server";
 import { BIRTH_COOKIE, BIRTH_TTL_SECONDS, readBirthDraft, sealBirthDraft } from "@/lib/birth-session";
 import { parseContext, type JourneyDraft } from "@/lib/context";
@@ -7,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   const headers = { "Cache-Control": "no-store" };
-  if (request.headers.get("origin") && request.headers.get("origin") !== new URL(request.url).origin) {
+  if (!isSameOriginRequest(request)) {
     return NextResponse.json({ ok: false, error: "Invalid request origin." }, { status: 403, headers });
   }
   if (!request.headers.get("content-type")?.includes("application/json")) {
