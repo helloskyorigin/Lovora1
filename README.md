@@ -86,7 +86,7 @@ Premium reports remain private, and new payments stay disabled by default until 
 ### Routes
 
 - `POST /api/checkout` — requires the verified free insight, adult acknowledgement from the form, receipt email, and `LOVORA_PAYMENTS_ENABLED=true`. Creates a single-use Dodo hosted checkout for the preconfigured product.
-- `POST /api/webhooks/dodo` — checks Standard Webhooks signature with raw body and server secret, then re-fetches Dodo payment details. Success must match the stored order, email, checkout session, product, INR currency, and ₹149 before fulfillment. Failed/cancelled and refund events do not grant access.
+- `POST /api/webhooks/dodo` — checks Standard Webhooks signature with raw body and server secret, then re-fetches Dodo payment details. Success must match the stored order, email, checkout session, product, and the Dodo-verified billing country/amount/currency (India INR 149; other countries USD 5) before fulfillment. Failed/cancelled and refund events do not grant access.
 - `/checkout/return` — customer status page. Dodo's query-string `status` is never trusted.
 - `POST /api/checkout/status` — accepts only the signed first-party checkout browser cookie plus matching order ID; returns pending/failed/generating/ready. When ready, issues an HttpOnly premium access cookie.
 - `GET /api/report` — for non-development orders, re-checks Redis purchase state and report binding before sending premium information. Refunded/revoked orders are denied.
@@ -105,7 +105,7 @@ DODO_PAYMENTS_WEBHOOK_KEY=
 Other required configuration: `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `PROKERALA_CLIENT_ID`, `PROKERALA_CLIENT_SECRET`, `REPORT_ENCRYPTION_SECRET` and GeoNames/Birth Session settings.
 
 1. Obtain explicit Dodo business/astrology product approval using an eligible adult-operated merchant account.
-2. In **Dodo test mode**, create a **one-time product** with base price **INR 149.00**, not subscription or pay-what-you-want. Verify that taxes are included so the customer is not billed extra, and the final settled payment's `total_amount` matches 14900 paise. The server refuses product-id, base currency or product price mismatch.
+2. In **Dodo test mode**, configure the existing product as **one-time USD 5.00 tax-inclusive** with Localized Pricing → By Country → **India INR 149.00**. Enable Adaptive Currency and verify the fixed USD checkout for non-India users. The server refuses an invalid base price, missing India rule, and unverified final amounts.
 3. Create an API key with the minimum required product read, checkout creation and payment read permissions; paste the key only into encrypted hosting environment settings.
 4. Add webhook URL `https://your-approved-domain.example/api/webhooks/dodo` under Developer → Webhooks. Subscribe to `payment.succeeded`, `payment.failed`, `payment.processing`, `payment.cancelled` and applicable refund/dispute events. Copy its own signing secret into `DODO_PAYMENTS_WEBHOOK_KEY`.
 5. Point `LOVORA_BASE_URL` to the exact web origin (HTTPS, no extra path). Switch `LOVORA_PAYMENTS_ENABLED=true` only while testing in test mode.
@@ -114,7 +114,7 @@ Other required configuration: `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKE
 
 The server uses Upstash Redis to persist private 90-day orders and one fulfillment lock per purchase. It stores encrypted birth-session snapshots, removes them once a report is created, and leaves live payment disabled without explicit configuration.
 
-**Current limitations:** A lost browser checkout cookie can be replaced with the email-recovery flow when a valid purchase is indexed and Resend email delivery is configured; the recovery flow has not yet been tested against live email delivery. Underlying astrology APIs, Dodo API and webhook events could not be exercised without merchant-owned secrets. Taxes, localized pricing and real checkout UI must be manually checked in Dodo test mode; a checkout can be rejected after verification if the amount differs from INR 149. Production legal/refund pages exist, but merchant/operator details and final policy review are required before live sales.
+**Current limitations:** A lost browser checkout cookie can be replaced with the email-recovery flow when a valid purchase is indexed and Resend email delivery is configured; the recovery flow has not yet been tested against live email delivery. Underlying astrology APIs, Dodo API and webhook events could not be exercised without merchant-owned secrets. Taxes, localized pricing and the real checkout UI must be checked in Dodo test mode; the webhook verifies the actual country-specific charge and will not grant access when the provider reports an unexpected amount. Production legal/refund pages exist, but merchant/operator details and final policy review are required before live sales.
 
 ## Phase 6 — account-free email report recovery, legal and Hindi report
 
@@ -176,19 +176,19 @@ City coverage is broad but not exhaustive; some smaller villages may be absent. 
 
 ## Read-only live provider verification
 
-After the production variables are configured in the **server environment** (never GitHub), run `npm run verify:live` from a trusted shell with a protected `.env.local`. It checks the active switches, Upstash PING, Prokerala OAuth and the Dodo **live** ₹149 one-time tax-inclusive product. It performs **no purchase**, creates **no checkout**, sends **no email**, and cannot validate webhook delivery or real unlock. Never put credentials in the repository or paste them into chats. A green check does not prove merchant approval or successful live settlement. Conduct an authorized end-to-end transaction only after merchant approval, and verify Dodo webhook delivery plus report unlock and email recovery before public launch.
+After the production variables are configured in the **server environment** (never GitHub), run `npm run verify:live` from a trusted shell with a protected `.env.local`. It checks the active switches, Upstash PING, Prokerala OAuth and the Dodo **live** USD 5 one-time tax-inclusive product with India ₹149 localized rule. It performs **no purchase**, creates **no checkout**, sends **no email**, and cannot validate webhook delivery or real unlock. Never put credentials in the repository or paste them into chats. A green check does not prove merchant approval or successful live settlement. Conduct an authorized end-to-end transaction only after merchant approval, and verify Dodo webhook delivery plus report unlock and email recovery before public launch.
 
 
 ## First 500 launch offer (₹149)
 
-The base price before the launch promotion was ₹299; the introductory ₹149 price saves ₹150 (about 50.2%). Set **DODO_LOVORA_PRODUCT_ID** to an eligible adult merchant's verified one-time **₹149.00 tax-inclusive** Dodo product before enabling checkout. Do not re-use a ₹299 product ID: the backend deliberately blocks mismatched prices. If there are unpaid legacy ₹299 orders in flight, retain their original ID under **DODO_LOVORA_LEGACY_PRODUCT_ID** so their earlier settlement can be independently verified.
+The base price before the launch promotion was ₹299; the introductory ₹149 price saves ₹150 (about 50.2%). Keep **DODO_LOVORA_PRODUCT_ID** pointed to the existing eligible adult merchant's product, now configured as **USD $5.00 tax-inclusive** with India **₹149.00** by-country localized price. Retain old pending order records and do not reuse an unrelated product ID. If there are unpaid legacy ₹299 orders in flight, retain their original ID under **DODO_LOVORA_LEGACY_PRODUCT_ID** so their earlier settlement can be independently verified.
 
 The first-500 promotion has a Redis-backed confirmed-payment counter, starting at zero for this offer. `GET /api/launch-offer` exposes only aggregate purchases (no customer data). Paid webhooks increment the counter once per verified ₹149 order even if Dodo retries. The UI does **not** claim 57% or 285 purchasers until real verified data supports it. If Redis is offline, the API hides progress and checkout fails closed.
 
 Note: the 500-user cutoff is checked when a new checkout begins, not a globally reserved payment-slot system. Multiple already-open checkouts near the 500th sale could settle after the limit; use payment-provider checkout expiration/quantity controls for a strict capped promotion. Never seed the counter with made-up purchases or fabricate reviews/testimonials.
 
 
-After 500 verified launch purchases, checkout switches to the normal ₹299 one-time Dodo product only when `DODO_LOVORA_REGULAR_PRODUCT_ID` is configured and verified at ₹299. Otherwise checkout is paused at the offer limit. An early checkout session may settle later, so a truly strict hard cap requires checkout-reservation controls at the provider.
+**Updated regional-pricing rule:** Checkout no longer switches to ₹299 after 500 purchases. India remains ₹149 and every other country $5. The early-supporter counter remains a historical aggregate and is not a pricing limit. Existing paid reports and old orders retain their original entitlements.
 
 
 ## Regional pricing (India ₹149, other countries $5)
