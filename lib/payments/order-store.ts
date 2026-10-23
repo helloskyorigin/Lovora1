@@ -9,7 +9,7 @@ export type PaidOrder={
  id:string;email:string;sessionId:string;paymentId:string;
  status:OrderStatus;reportId:string;encryptedDraft:string;createdAt:string;
  generationAttempts?:number;lastAttemptAt?:number;
- pricePaise?:number;currency?:string;billingCountry?:string;productId?:string;
+ pricePaise?:number;currency?:string;billingCountry?:string;productId?:string;pricingModel?:"regional_v1";
 };
 const PREFIX="lovora:order:v1:";
 const DURATION=60*60*24*365;
@@ -42,7 +42,7 @@ export async function readOrder(id:string):Promise<PaidOrder|null>{
  return {id:out.id,email:out.email||"",sessionId:out.sessionId||"",paymentId:out.paymentId||"",
  status:out.status as OrderStatus,reportId:out.reportId||"",encryptedDraft:out.encryptedDraft||"",createdAt:out.createdAt||"",
  generationAttempts:Number(out.generationAttempts||0),lastAttemptAt:Number(out.lastAttemptAt||0),
- pricePaise:Number(out.pricePaise||ORIGINAL_PRICE_PAISE),currency:out.currency||"INR",billingCountry:out.billingCountry||"",productId:out.productId||""};
+ pricePaise:Number(out.pricePaise||ORIGINAL_PRICE_PAISE),currency:out.currency||undefined,billingCountry:out.billingCountry||"",productId:out.productId||"",pricingModel:out.pricingModel==="regional_v1"?"regional_v1":undefined};
 }
 export async function patchOrder(id:string,updates:Partial<Omit<PaidOrder,"id">>){
  const entries=Object.entries(updates).flatMap(([name,value])=>[name,value]);

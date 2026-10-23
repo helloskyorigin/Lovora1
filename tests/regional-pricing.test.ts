@@ -45,6 +45,8 @@ test("Provider verified billing country wins; detect currency mismatch and spoof
  assert.equal(verify("IN","INR",29900),false);
  assert.equal(validPayment({...payment("IN","INR",14900),status:"failed"},order,item,item),false);
  assert.equal(validPayment({...payment("IN","INR",14900),checkout_session_id:"cks_other"},order,item,item),false);
+ // Historical orders can use the same product ID but retain their own INR quote.
+ assert.equal(validPayment(payment("US","INR",14900),{...order,pricePaise:14900},item),true);
  const legacy={...order,pricePaise:29900,productId:"pdt_Legacy"};
  assert.equal(validPayment({...payment("IN","INR",29900),product_cart:[{product_id:"pdt_Legacy",quantity:1}]},legacy,"pdt_Legacy",item),true);
 });

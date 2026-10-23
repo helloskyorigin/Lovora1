@@ -58,7 +58,7 @@ export async function POST(request:NextRequest){
   const orderId=randomUUID();
   await createOrder({id:orderId,email,sessionId:"",paymentId:"",status:"pending",reportId:"",
     encryptedDraft:encodeDraft(draft),createdAt:new Date().toISOString(),
-    pricePaise:quote.amount,currency:quote.currency,productId});
+    pricePaise:quote.amount,currency:quote.currency,pricingModel:"regional_v1",productId});
   const session=await dodoPost<{session_id?:string;checkout_url?:string|null}>("/checkouts",{
     product_cart:[{product_id:productId,quantity:1}],
     customer:{email,name:draft.firstName||undefined},
