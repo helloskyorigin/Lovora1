@@ -30,7 +30,7 @@ test("Dodo product must have $5 USD base and fixed INR 149",()=>{
 });
 function payment(country:string,currency:string,amount:number){
  return {status:"succeeded",currency,total_amount:amount,billing:{country},payment_id:"pay_XYZ",
-  metadata:{lovora_order_id:"order_1"},checkout_session_id:"cks_XYZ",product_cart:[{product_id:item,quantity:1}],customer:{email:"test@example.com"}} as const;
+  metadata:{lovora_order_id:"order_1"},checkout_session_id:"cks_XYZ",product_cart:[{product_id:item,quantity:1}],customer:{email:"test@example.com"}};
 }
 const order={id:"order_1",sessionId:"cks_XYZ",email:"test@example.com",pricePaise:14900,currency:"INR",productId:item};
 test("Provider verified billing country wins; detect currency mismatch and spoofed amounts",()=>{
