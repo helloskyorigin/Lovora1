@@ -23,7 +23,7 @@ export function nativeCurrencyForCountry(country:string|null):string|null{
 }
 export function minorUnits(currency:string):number{
  const f=new Intl.NumberFormat("en-US",{style:"currency",currency});
- return f.resolvedOptions().maximumFractionDigits;
+ return f.resolvedOptions().maximumFractionDigits??2;
 }
 export function formatRegionalAmount(amount:number,currency:string):string{
  if(!Number.isSafeInteger(amount)||amount<0||!/^[A-Z]{3}$/.test(currency))throw Error("INVALID_CURRENCY_AMOUNT");

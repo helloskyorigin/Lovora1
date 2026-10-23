@@ -28,6 +28,7 @@ export function LaunchOffer({lang,placement}:{lang:"en"|"hi";placement:"hero"|"p
    <span>{lang==="hi"?"एक रीडिंग · एक बार का भुगतान":"One reading · One-time payment"}</span>
   </div>
   <div className="launch-offer__price"><strong>{quote.label}</strong><small>{lang==="hi"?"बिना सब्सक्रिप्शन":"NO SUBSCRIPTION"}</small></div>
+  {quote.source==="usd-base"&&quote.country!=="US"&&<p className="launch-offer__progress-label">{lang==="hi"?"अंतिम स्थानीय मूल्य Dodo checkout पर दिखेगा।":quote.notice}</p>}
   {offer&&offer.claimed<500&&<div className="launch-offer__progress">
    <div className="launch-offer__progress-label"><span>{lang==="hi"?`${offer.claimed} / 500 शुरुआती खरीदार`:`${offer.claimed} / 500 early supporters`}</span>
      <strong>{offer.progress}%</strong></div>

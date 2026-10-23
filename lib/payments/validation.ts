@@ -1,3 +1,5 @@
+import {nativeCurrencyForCountry} from "../pricing";
+
 export const PRICE_PAISE = 14900; // India localized INR
 export const USD_PRICE_CENTS = 500; // Global base USD
 export const ORIGINAL_PRICE_PAISE = 29900; // Existing legacy orders
@@ -36,6 +38,7 @@ export function validPayment(payment:DodoPayment,order:{
    : typeof country==="string"&&/^[A-Z]{2}$/.test(country)&&
      typeof payment.currency==="string"&&/^[A-Z]{3}$/.test(payment.currency)&&
      (country==="US"?payment.currency==="USD"&&payment.total_amount===USD_PRICE_CENTS:
+       (!nativeCurrencyForCountry(country)||[nativeCurrencyForCountry(country),"USD"].includes(payment.currency))&&
        typeof payment.total_amount==="number"&&Number.isSafeInteger(payment.total_amount)&&
        payment.total_amount>0&&payment.total_amount<=1_000_000);
  // For international FX there is no trustworthy static exchange rate. The value is

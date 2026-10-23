@@ -206,7 +206,7 @@ export default function Home() {
     <section className="section pricing-section" id="pricing"><div className="wrap pricing-layout">
       <div className="pricing-intro" data-reveal><span className="eyebrow"><b>✦</b>{c.priceKicker}</span><h2>{c.priceTitle}</h2><p>{c.priceDescription}</p></div>
       <div className="pricing-card" data-reveal><div className="pricing-star">✦</div><div className="pricing-amount">{quote.label}</div><p className="pricing-once">{c.priceSub}</p><LaunchOffer lang={lang} placement="pricing"/><div className="pricing-divider"/><ul>{c.priceFeatures.map(t=><li key={t}><span>✓</span>{t}</li>)}</ul>
-        <a className="cta primary pricing-cta" href={`/birth-details?lang=${lang}`}>{c.priceButton}<span aria-hidden="true">↗</span></a><p className="pricing-note">{c.priceFooter}</p>
+        <a className="cta primary pricing-cta" href={`/birth-details?lang=${lang}`}>{c.priceButton}<span aria-hidden="true">↗</span></a><p className="pricing-note">{c.priceFooter}{quote.source==="usd-base"&&quote.country!=="US"?" · "+quote.notice:""}</p>
       </div>
     </div></section>
 

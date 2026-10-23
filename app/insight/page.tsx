@@ -126,6 +126,7 @@ function ResultPage(){
       <button type="button" className="lovora-result__main-unlock" onClick={()=>setChoice(true)}>
        {c.price.replace("₹149",quote.label)} <span aria-hidden="true">↗</span>
       </button>
+      {quote.source==="usd-base"&&quote.country!=="US"&&<p className="lovora-result__notice">{quote.notice}</p>}
       {!verified&&<p className="lovora-result__notice">{c.restricted}</p>}
       <div className="lovora-result__blurred" aria-hidden="true"><span>01</span><div><b>{c.first}</b><i/></div><span>↗</span></div>
       <div className="lovora-result__blurred" aria-hidden="true"><span>02</span><div><b>{c.second}</b><i/></div><span>↗</span></div>

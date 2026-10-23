@@ -44,7 +44,7 @@ export function ResultChoiceModal({lang,verified,onFree,onVerify}:{lang:Lang;ver
      <strong>{hi?"पूरी कहानी अनलॉक करें":"Unlock Full Story"} · {quote.label}</strong>
      <span>{hi?"7 अध्याय · एक बार का भुगतान":"7 chapters · one-time payment"} <span aria-hidden="true">↗</span></span>
     </button>
-    <p className="lovora-choice__fine">{hi?"वास्तविक जन्म-कुंडली पर आधारित, निश्चित भविष्यवाणी नहीं।":"Traditional birth-chart interpretation for reflection, not a guaranteed prediction."}</p>
+    <p className="lovora-choice__fine">{hi?"वास्तविक जन्म-कुंडली पर आधारित, निश्चित भविष्यवाणी नहीं।":"Traditional birth-chart interpretation for reflection, not a guaranteed prediction."}{quote.source==="usd-base"&&quote.country!=="US"?" "+quote.notice:""}</p>
    </>:<>
     <button ref={primary} type="button" className="lovora-choice__back" onClick={()=>setStep("choose")}>← {hi?"विकल्प वापस":"Back to options"}</button>
     <h2 id="lovora-choice-heading">{hi?"आपकी पूरी कहानी":"Your complete story"}</h2>
