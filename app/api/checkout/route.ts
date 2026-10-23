@@ -4,11 +4,10 @@ import {NextRequest,NextResponse} from "next/server";
 import {readBirthDraftFromRequest} from "@/lib/birth-session";
 import type {JourneyDraft} from "@/lib/context";
 import { isMinorBirthDate } from "@/lib/birth";
-import {dodoGet,dodoPost,assertProduct,getDodoProductId,verifiedCheckoutURL,PRICE_PAISE,type DodoProduct} from "@/lib/payments/dodo";
-import {getLaunchOfferClaimed} from "@/lib/payments/offer-store";
-import {ORIGINAL_PRICE_PAISE} from "@/lib/payments/validation";
-import {LAUNCH_LIMIT} from "@/lib/payments/offer-store-key";
-import {createOrder,encodeDraft,limitAttempts,patchOrder} from "@/lib/payments/order-store";
+import {dodoGet,dodoPost,assertProduct,getDodoProductId,verifiedCheckoutURL,type DodoProduct} from "@/lib/payments/dodo";
+import {assertIndiaLocalizedPrice,type LocalizedPricesResponse} from "@/lib/payments/validation";
+import {priceForRequest} from "@/lib/pricing";
+   import {createOrder,encodeDraft,limitAttempts,patchOrder} from "@/lib/payments/order-store";
 import {CHECKOUT_COOKIE,issueCheckoutOrder} from "@/lib/payments/checkout-cookie";
 
 export const runtime="nodejs";
@@ -52,20 +51,21 @@ export async function POST(request:NextRequest){
   const hash=createHash("sha256").update(ip).digest("hex").slice(0,30);
   if(!await limitAttempts("checkout:"+hash,6,3600))
    return NextResponse.json({ok:false,error:"Too many checkout attempts. Try later."},{status:429,headers});
-  const launchActive=(await getLaunchOfferClaimed())<LAUNCH_LIMIT;
-  const productId=launchActive?getDodoProductId():process.env.DODO_LOVORA_REGULAR_PRODUCT_ID;
-  const pricePaise=launchActive?PRICE_PAISE:ORIGINAL_PRICE_PAISE;
-  if(!productId||!/^pdt_[A-Za-z0-9]+$/.test(productId))
-   return NextResponse.json({ok:false,error:"Launch offer is sold out. Regular-price checkout is not available yet."},{status:409,headers});
-  assertProduct(await dodoGet<DodoProduct>("/products/"+encodeURIComponent(productId)),productId,pricePaise);
+  const quote=priceForRequest(request.headers);
+  const productId=getDodoProductId();
+  assertProduct(await dodoGet<DodoProduct>("/products/"+encodeURIComponent(productId)),productId);
+  assertIndiaLocalizedPrice(await dodoGet<LocalizedPricesResponse>("/products/"+encodeURIComponent(productId)+"/localized-prices"));
   const orderId=randomUUID();
   await createOrder({id:orderId,email,sessionId:"",paymentId:"",status:"pending",reportId:"",
     encryptedDraft:encodeDraft(draft),createdAt:new Date().toISOString(),
-    pricePaise,productId});
+    pricePaise:quote.amount,currency:quote.currency,productId});
   const session=await dodoPost<{session_id?:string;checkout_url?:string|null}>("/checkouts",{
     product_cart:[{product_id:productId,quantity:1}],
     customer:{email,name:draft.firstName||undefined},
-    billing_currency:"INR",
+    // Fixed currency prevents adaptive FX from silently changing $5 into EUR/GBP.
+    // Dodo by-country localized pricing takes priority if billing country is India.
+    billing_currency:quote.currency,
+    feature_flags:{allow_currency_selection:false,allow_discount_code:false},
     minimal_address:true,
     metadata:{lovora_order_id:orderId},
     return_url:base+"/checkout/return?order="+orderId
@@ -73,7 +73,7 @@ export async function POST(request:NextRequest){
   if(!session.session_id||!/^cks_[A-Za-z0-9]+$/.test(session.session_id))throw new Error("INVALID_DODO_SESSION");
   const url=verifiedCheckoutURL(session.checkout_url);
   await patchOrder(orderId,{sessionId:session.session_id});
-  const response=NextResponse.json({ok:true,checkoutUrl:url},{headers});
+  const response=NextResponse.json({ok:true,checkoutUrl:url,quotedPrice:quote.label},{headers});
   response.cookies.set(CHECKOUT_COOKIE,issueCheckoutOrder(orderId),{
    httpOnly:true,secure:process.env.NODE_ENV==="production",sameSite:"lax",path:"/",maxAge:60*60*24*30
   });
@@ -82,7 +82,7 @@ export async function POST(request:NextRequest){
   const code=error instanceof Error?error.message:"UNKNOWN";
   console.error("LOVORA checkout setup failed:",code);
   const message=code==="DODO_PRODUCT_PRICE_MISMATCH"
-   ?"Merchant product must be configured as an the current ₹149 launch / ₹299 regular one-time purchase."
+   ?"Dodo must have one $5 tax-inclusive USD product with a ₹149 INR India country price."
    :"Secure checkout is temporarily unavailable. Please retry after configuration.";
   return NextResponse.json({ok:false,error:message},{status:503,headers});
  }

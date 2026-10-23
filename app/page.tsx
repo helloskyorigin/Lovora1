@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import {LaunchOffer,useLaunchOffer} from '@/components/LaunchOffer';
+import {LaunchOffer} from '@/components/LaunchOffer';
+import {useRegionalPrice} from '@/components/PricingProvider';
 
 type Lang = 'en' | 'hi';
 const content = {
@@ -140,8 +141,7 @@ export default function Home() {
   const [lang, setLang] = useState<Lang>('en');
   const [sample, setSample] = useState(0);
   const c = content[lang];
-  const {offer}=useLaunchOffer();
-  const offerComplete=offer?.active===false;
+  const quote=useRegionalPrice();
   useEffect(()=>{document.documentElement.lang=lang;},[lang]);
   useEffect(()=>{
     if(typeof IntersectionObserver==='undefined'||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
@@ -165,7 +165,7 @@ export default function Home() {
           <p className="hero-tagline">{c.tagline}</p>
           <p className="hero-description">{c.description}</p>
           <a href={`/birth-details?lang=${lang}`} className="cta primary">{c.primary}<span aria-hidden="true">↗</span></a>
-          <div className="hero-notes"><span>✧ {c.free}</span><i/><span>{c.account}</span><i/><span>{offerComplete?(lang==="hi"?"पूरी रीडिंग ₹299": "Complete reading ₹299"):c.priceHint}</span></div>
+          <div className="hero-notes"><span>✧ {c.free}</span><i/><span>{c.account}</span><i/><span>{c.priceHint.replace("₹149",quote.label).replace(" · लॉन्च ऑफ़र"," · एक बार").replace(" · launch offer"," · one-time")}</span></div>
         </div>
         <div className="hero-art"><Orrery/><span className="orbital-caption">LOVE <i/> FATE <i/> CONNECTION</span></div>
       </div>
@@ -192,7 +192,7 @@ export default function Home() {
 
     <section className="section steps-section" id="how"><div className="wrap">
       <div className="section-heading" data-reveal><span className="eyebrow"><b>✦</b>{c.stepsKicker}</span><h2>{c.stepsTitle}</h2></div>
-      <div className="step-grid">{c.steps.map((step,i)=><div className="step" key={step.t} data-reveal><span className="step-number">0{i+1}</span><h3>{step.t}</h3><p>{step.d}</p></div>)}</div>
+      <div className="step-grid">{c.steps.map((step,i)=><div className="step" key={step.t} data-reveal><span className="step-number">0{i+1}</span><h3>{step.t}</h3><p>{step.d.replace("₹149",quote.label)}</p></div>)}</div>
     </div></section>
 
     <section className="section chapters-section"><div className="wrap chapters-layout">
@@ -205,12 +205,12 @@ export default function Home() {
 
     <section className="section pricing-section" id="pricing"><div className="wrap pricing-layout">
       <div className="pricing-intro" data-reveal><span className="eyebrow"><b>✦</b>{c.priceKicker}</span><h2>{c.priceTitle}</h2><p>{c.priceDescription}</p></div>
-      <div className="pricing-card" data-reveal><div className="pricing-star">✦</div>{!offerComplete&&<div className="pricing-old"><del>₹299</del> <span>50% OFF</span></div>}<div className="pricing-amount">{offerComplete?"₹299":"₹149"}</div><p className="pricing-once">{c.priceSub}</p><LaunchOffer lang={lang} placement="pricing"/><div className="pricing-divider"/><ul>{c.priceFeatures.map(t=><li key={t}><span>✓</span>{t}</li>)}</ul>
+      <div className="pricing-card" data-reveal><div className="pricing-star">✦</div><div className="pricing-amount">{quote.label}</div><p className="pricing-once">{c.priceSub}</p><LaunchOffer lang={lang} placement="pricing"/><div className="pricing-divider"/><ul>{c.priceFeatures.map(t=><li key={t}><span>✓</span>{t}</li>)}</ul>
         <a className="cta primary pricing-cta" href={`/birth-details?lang=${lang}`}>{c.priceButton}<span aria-hidden="true">↗</span></a><p className="pricing-note">{c.priceFooter}</p>
       </div>
     </div></section>
 
-    <section className="section faq-section"><div className="wrap faq-layout"><div data-reveal><span className="eyebrow"><b>✦</b>{c.faqKicker}</span><h2>{c.faqTitle}</h2></div><div className="faq-items">{c.faqs.map(([q,a])=><details key={q}><summary>{q}<span aria-hidden="true">+</span></summary><p>{a}</p></details>)}</div></div></section>
+    <section className="section faq-section"><div className="wrap faq-layout"><div data-reveal><span className="eyebrow"><b>✦</b>{c.faqKicker}</span><h2>{c.faqTitle}</h2></div><div className="faq-items">{c.faqs.map(([q,a])=><details key={q}><summary>{q}<span aria-hidden="true">+</span></summary><p>{a.replace("₹149",quote.label)}</p></details>)}</div></div></section>
     <footer className="footer"><div className="wrap footer-top"><div><a className="logo" href="#top"><Mark/><span>LOVORA</span></a><p>{c.footerTag}</p></div><a className="back-top" href="#top">{c.back} ↑</a></div><div className="wrap footer-bottom"><p>{c.footerNote}</p><nav aria-label="Help and legal" className="lovora-legal-links"><a href="/recover">Recover My Story</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/refunds">Refunds</a><a href="/support">Support</a></nav><span>© {new Date().getFullYear()} LOVORA</span></div></footer>
   </main>;
 }

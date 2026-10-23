@@ -6,6 +6,7 @@ import {fulfillPaidOrder} from "@/lib/payments/fulfill";
 import {generationRetryState} from "@/lib/payments/retry-policy";
 import {indexPurchasedReport} from "@/lib/recovery/store";
 import {REPORT_COOKIE,sealAccess,ACCESS_TTL} from "@/lib/report/access";
+import {formatRegionalAmount} from "@/lib/pricing";
 
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
@@ -32,7 +33,9 @@ export async function POST(request:NextRequest){
   const publicStatus=status==="paid"
    ?generationRetryState(order.generationAttempts||0,order.lastAttemptAt||0)==="needs_support"?"needs_support":"generating"
    :status;
-  const response=NextResponse.json({ok:true,status:publicStatus,ready:status==="ready"}, {headers});
+  const response=NextResponse.json({ok:true,status:publicStatus,ready:status==="ready",
+   verifiedCharge:(status==="paid"||status==="ready")&&order.paymentId&&order.currency
+    ?formatRegionalAmount(order.pricePaise||0,order.currency):undefined}, {headers});
   if(status==="ready"&&order.reportId&&order.paymentId){
    // Repair missing recovery indexing after transient email-index storage errors.
    try{await indexPurchasedReport(order);}catch(error){

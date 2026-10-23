@@ -9,6 +9,7 @@ function ReturnContent(){
  const order=params.get("order");
  const [status,setStatus]=useState<State>("checking");
  const [detail,setDetail]=useState("");
+ const [verifiedCharge,setVerifiedCharge]=useState<string|null>(null);
  const [attempt,setAttempt]=useState(0);
  const refresh=useCallback(async()=>{
   if(!order||!/^[a-f0-9-]{36}$/.test(order)){setStatus("error");setDetail("Invalid checkout return link.");return;}
@@ -17,8 +18,9 @@ function ReturnContent(){
     method:"POST",credentials:"same-origin",cache:"no-store",headers:{"Content-Type":"application/json"},
     body:JSON.stringify({orderId:order})
    });
-   const value=await response.json() as {ok?:boolean;status?:State;ready?:boolean;error?:string};
+   const value=await response.json() as {ok?:boolean;status?:State;ready?:boolean;error?:string;verifiedCharge?:string};
    if(!response.ok||!value.ok)throw new Error(value.error||"Unable to check payment.");
+   if(value.verifiedCharge)setVerifiedCharge(value.verifiedCharge);
    if(value.ready){setStatus("ready");router.replace("/report");return;}
    setStatus(value.status==="paid"?"generating":value.status||"pending");
   }catch(e){setStatus("error");setDetail(e instanceof Error?e.message:"Unable to verify the payment.");}
@@ -46,6 +48,7 @@ function ReturnContent(){
    <p className="lovora-return__kicker">YOUR COMPLETE MARRIAGE READING</p>
    <h1>{title}</h1>
    <p>{body}</p>
+   {verifiedCharge&&<p>Verified Dodo charge: <strong>{verifiedCharge}</strong></p>}
    {(status==="pending"||status==="checking"||status==="generating")&&attempt>=24&&
      <p>Verification is taking longer than expected. Your order is saved. Use purchase recovery by email or contact support if it does not arrive.</p>}
    <div className="lovora-return__actions">

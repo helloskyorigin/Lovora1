@@ -3,6 +3,7 @@ import {Suspense,useCallback,useEffect,useRef,useState} from "react";
 import Link from "next/link";
 import {useSearchParams} from "next/navigation";
 import {CheckoutForm} from "@/components/CheckoutForm";
+import {useRegionalPrice} from "@/components/PricingProvider";
 import {ResultChoiceModal} from "@/components/ResultChoiceModal";
 import {getBirthSessionHeaders,rememberBirthSession} from "@/lib/client-birth-session";
 import {readScanResult} from "@/lib/client-scan-result";
@@ -70,6 +71,7 @@ function ResultPage(){
  const choiceClosed=useCallback(()=>setChoice(false),[]);
  const once=useRef(false);
  const c=copy[lang];
+ const quote=useRegionalPrice();
  const load=useCallback(async():Promise<boolean>=>{
   try{
    const res=await fetch("/api/insight",{
@@ -118,11 +120,11 @@ function ResultPage(){
       <p className="lovora-result__small">{c.caveat}</p>
      </section>
      <section className="lovora-result__locked" aria-label={c.unlock}>
-      <div className="lovora-result__offer"><span>✦ FIRST 500</span><div><del>₹299</del><strong>₹149</strong></div></div>
+      <div className="lovora-result__offer"><span>✦ {lang==="hi"?"एक बार का भुगतान":"ONE-TIME PAYMENT"}</span><div><strong>{quote.label}</strong></div></div>
       <h2>{c.unlock}</h2>
       <p>{c.unlockDesc}</p>
       <button type="button" className="lovora-result__main-unlock" onClick={()=>setChoice(true)}>
-       {c.price} <span aria-hidden="true">↗</span>
+       {c.price.replace("₹149",quote.label)} <span aria-hidden="true">↗</span>
       </button>
       {!verified&&<p className="lovora-result__notice">{c.restricted}</p>}
       <div className="lovora-result__blurred" aria-hidden="true"><span>01</span><div><b>{c.first}</b><i/></div><span>↗</span></div>

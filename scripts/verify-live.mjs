@@ -48,8 +48,14 @@ await check("Dodo live product",async()=>{
  });
  if(!r.ok)throw Error("Live product lookup HTTP "+r.status);
  const d=await r.json();
- if(d.product_id!==id||d.is_recurring!==false||d.price?.type!=="one_time_price"||d.price?.currency!=="INR"||d.price?.price!==14900||d.price?.tax_inclusive!==true)throw Error("Product must be INR 149 one-time and tax inclusive");
- return "Live Dodo product verified as one-time INR 149";
+ if(d.product_id!==id||d.is_recurring!==false||d.price?.type!=="one_time_price"||d.price?.currency!=="USD"||d.price?.price!==500||d.price?.tax_inclusive!==true||d.pricing_mode!=="by_country")throw Error("Product must be USD 5 tax-inclusive one-time with by_country pricing");
+ const rulesResponse=await fetch("https://live.dodopayments.com/products/"+encodeURIComponent(id)+"/localized-prices",{
+  signal:AbortSignal.timeout(10000),headers:{"Authorization":"Bearer "+e.DODO_PAYMENTS_API_KEY}
+ });
+ if(!rulesResponse.ok)throw Error("Localized rules HTTP "+rulesResponse.status);
+ const rules=await rulesResponse.json();
+ if(!Array.isArray(rules.items)||!rules.items.some(x=>x.country_code==="IN"&&x.currency==="INR"&&x.amount===14900))throw Error("India localized ₹149 price missing");
+ return "Live Dodo product verified: USD 5 base + India INR 149 rule";
 });
 console.table(report);
 console.log("NOT TESTED: actual charges, webhook delivery, successful report unlocking, historical timezone quality, Resend delivery, merchant approval.");

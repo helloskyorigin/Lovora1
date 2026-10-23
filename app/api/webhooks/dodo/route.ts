@@ -44,9 +44,9 @@ export async function POST(request:NextRequest){
   if(!order.sessionId)return new Response("Checkout session pending; retry event",{status:503});
   if(payment.checkout_session_id!==order.sessionId)return NextResponse.json({ok:true,ignored:true});
   if(type==="payment.succeeded"){
-   if(!validPayment(payment,order,order.productId||process.env.DODO_LOVORA_LEGACY_PRODUCT_ID||process.env.DODO_LOVORA_REGULAR_PRODUCT_ID||getDodoProductId()))return new Response("Payment validation failed",{status:422});
+   if(!validPayment(payment,order,order.productId||process.env.DODO_LOVORA_LEGACY_PRODUCT_ID||getDodoProductId(),process.env.DODO_LOVORA_PRODUCT_ID))return new Response("Payment validation failed",{status:422});
    if(payment.payment_id!==paymentId)return new Response("Mismatched payment identity",{status:422});
-   if(!await markVerifiedPaid(orderId,paymentId))return NextResponse.json({ok:true,revoked:true});
+   if(!await markVerifiedPaid(orderId,paymentId,payment.total_amount!,payment.currency!,payment.billing?.country||""))return NextResponse.json({ok:true,revoked:true});
    try{
     await fulfillPaidOrder(orderId);
    }catch(err){
