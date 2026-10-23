@@ -66,6 +66,8 @@ test("Webhook uses Dodo final converted currency, not stale IP quote",()=>{
  assert.equal(verify("GB","USD",500),true); // user switched to base in Dodo
  assert.equal(verify("IN","USD",500),false);
  assert.equal(verify("US","INR",14900),false);
+ assert.equal(verify("GB","INR",14900),false);
+ assert.equal(verify("FR","GBP",460),false);
  assert.equal(verify("IN","INR",29900),false);
  assert.equal(verify("GB","GBP",0),false);
  assert.equal(validPayment({...payment("IN","INR",14900),status:"failed"},order,item,item),false);
