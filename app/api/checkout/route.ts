@@ -62,10 +62,10 @@ export async function POST(request:NextRequest){
   const session=await dodoPost<{session_id?:string;checkout_url?:string|null}>("/checkouts",{
     product_cart:[{product_id:productId,quantity:1}],
     customer:{email,name:draft.firstName||undefined},
-    // Fixed currency prevents adaptive FX from silently changing $5 into EUR/GBP.
-    // Dodo by-country localized pricing takes priority if billing country is India.
-    billing_currency:quote.currency,
-    feature_flags:{allow_currency_selection:false,allow_discount_code:false},
+    // Leave billing_currency unset: Dodo Adaptive Currency chooses by billing country.
+    // The shopper can change billing country or switch back to the USD base at checkout.
+    ...(quote.country?{billing_address:{country:quote.country}}:{}),
+    feature_flags:{allow_currency_selection:true,allow_customer_editing_country:true,allow_discount_code:false},
     minimal_address:true,
     metadata:{lovora_order_id:orderId},
     return_url:base+"/checkout/return?order="+orderId
@@ -73,7 +73,8 @@ export async function POST(request:NextRequest){
   if(!session.session_id||!/^cks_[A-Za-z0-9]+$/.test(session.session_id))throw new Error("INVALID_DODO_SESSION");
   const url=verifiedCheckoutURL(session.checkout_url);
   await patchOrder(orderId,{sessionId:session.session_id});
-  const response=NextResponse.json({ok:true,checkoutUrl:url,quotedPrice:quote.label},{headers});
+  const response=NextResponse.json({ok:true,checkoutUrl:url,quotedPrice:quote.label,
+    notice:"Dodo shows your final payable total, including any local-currency conversion, before confirmation."},{headers});
   response.cookies.set(CHECKOUT_COOKIE,issueCheckoutOrder(orderId),{
    httpOnly:true,secure:process.env.NODE_ENV==="production",sameSite:"lax",path:"/",maxAge:60*60*24*30
   });

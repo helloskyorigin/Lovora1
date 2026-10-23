@@ -34,6 +34,6 @@ export function CheckoutForm({lang}:{lang:"en"|"hi"}){
     {error&&<p className="lovora-checkout__error" role="alert">{error}</p>}
   <button type="submit" disabled={busy||!ack} className="lovora-checkout__button">{busy?(lang==="hi"?"चेकआउट खोल रहे हैं...":"Preparing secure checkout..."):(lang==="hi"?"पूरी कहानी अनलॉक करें — "+price:"Unlock My Complete Story — "+price)} <span>↗</span></button>
   <p className="lovora-checkout__fine"><a href="/terms">Terms</a> · <a href="/privacy">Privacy</a> · <a href="/refunds">Refunds</a> · <a href="/support">Support</a></p>
-  <p className="lovora-checkout__fine">{lang==="hi"?"यह स्थान के आधार पर दिखाया गया मूल्य है। Dodo checkout पर अंतिम बिलिंग देश और राशि जाँचकर ही भुगतान करें। भुगतान सत्यापित होने पर रिपोर्ट खुलेगी।":"Price shown is based on your approximate region. The billing country and final total shown by Dodo at checkout control your charge. Review that total before paying. Only verified payments unlock the report."}</p>
+  <p className="lovora-checkout__fine">{lang==="hi"?"यह प्रारंभिक मूल्य है। Dodo चेकआउट पर आपके बिलिंग देश की स्थानीय मुद्रा में अंतिम राशि दिखेगी। भुगतान से पहले उसे जाँचें।":quote.notice+" Only verified successful payments unlock the report."}</p>
  </form>;
 }

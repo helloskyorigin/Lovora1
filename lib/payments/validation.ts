@@ -8,6 +8,8 @@ export type DodoPayment = {
  product_cart?: {product_id:string;quantity:number}[];
  customer?: {email?:string}; refund_status?:string;
  billing?: {country?:string};
+ settlement_amount?:number;settlement_currency?:string;
+ discount_id?:string|null;
 };
 export type DodoProduct = { product_id?:string; is_recurring?:boolean;pricing_mode?:string;
  price?:{type?:string;currency?:string;price?:number;pay_what_you_want?:boolean;tax_inclusive?:boolean} };
@@ -29,12 +31,19 @@ export function validPayment(payment:DodoPayment,order:{
 },product:string,regionalProductId?:string):boolean {
  const country=payment.billing?.country;
  const regional=product===regionalProductId;
- const correctAmount=regional
-  ? country==="IN"
+ const regionalAllowed=country==="IN"
    ? payment.currency==="INR"&&payment.total_amount===PRICE_PAISE
-   : typeof country==="string"&&/^[A-Z]{2}$/.test(country)&&payment.currency==="USD"&&payment.total_amount===USD_PRICE_CENTS
-  : payment.currency===(order.currency||"INR")&&payment.total_amount===(order.pricePaise??ORIGINAL_PRICE_PAISE);
- return !!correctAmount&&payment.status==="succeeded"&&
+   : typeof country==="string"&&/^[A-Z]{2}$/.test(country)&&
+     typeof payment.currency==="string"&&/^[A-Z]{3}$/.test(payment.currency)&&
+     (country==="US"?payment.currency==="USD"&&payment.total_amount===USD_PRICE_CENTS:
+       typeof payment.total_amount==="number"&&Number.isSafeInteger(payment.total_amount)&&
+       payment.total_amount>0&&payment.total_amount<=1_000_000);
+ // For international FX there is no trustworthy static exchange rate. The value is
+ // Dodo's server-retrieved, succeeded payment, for the sole verified product in
+ // the checkout. We deliberately do not compare an old on-site FX preview.
+ const correctAmount=regional?regionalAllowed:
+  payment.currency===(order.currency||"INR")&&payment.total_amount===(order.pricePaise??ORIGINAL_PRICE_PAISE);
+ return !!correctAmount&&payment.status==="succeeded"&&payment.discount_id==null&&
   payment.metadata?.lovora_order_id===order.id&&payment.checkout_session_id===order.sessionId&&
   Array.isArray(payment.product_cart)&&payment.product_cart.length===1&&
   payment.product_cart[0].product_id===product&&payment.product_cart[0].quantity===1&&
