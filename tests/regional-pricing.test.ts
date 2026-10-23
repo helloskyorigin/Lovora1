@@ -72,6 +72,6 @@ test("Webhook uses Dodo final converted currency, not stale IP quote",()=>{
  assert.equal(validPayment({...payment("IN","INR",14900),status:"cancelled"},order,item,item),false);
  assert.equal(validPayment({...payment("GB","GBP",395),discount_id:"dsc_illegal"},order,item,item),false);
  assert.equal(validPayment({...payment("GB","GBP",395),checkout_session_id:"cks_other"},order,item,item),false);
- const legacy={...order,pricePaise:29900,productId:"pdt_Legacy"};
+ const legacy={...order,pricePaise:29900,currency:"INR",productId:"pdt_Legacy"};
  assert.equal(validPayment({...payment("IN","INR",29900),product_cart:[{product_id:"pdt_Legacy",quantity:1}]},legacy,"pdt_Legacy",item),true);
 });
